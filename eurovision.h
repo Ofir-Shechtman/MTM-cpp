@@ -7,6 +7,7 @@
 // it's allowed to define here any using statements, according to needs.
 // do NOT define here : using namespace std;
 using std::string;
+using std::ostream;
 //---------------------------------------------------
 
 enum VoterType { All, Regular, Judge };
@@ -18,19 +19,40 @@ class Participant
 {
     const string state;
     string song;
+    int timeLength;
     string singer;
-    int song_length;
     int regular_votes;
     int judge_votes;
+    bool isRegistered;
+    bool isRegistrationPhase;
 
 public:
+    Participant(const string state, const string song,
+                const int song_length, const string singer);
 
-// need to define here possibly c'tr and d'tr and ONLY methods that
-// are mentioned and demonstrated in the test example that has been published.
-// NO OTHER METHODS SHOULD APPEAR HERE.
+    ~Participant() = default;
 
-// NO friend is allowed here.
+    Participant(const Participant &p) = delete;
 
+    Participant &operator=(const Participant &p) = delete;
+
+    friend ostream &operator<<(ostream &os, const Participant &p);
+
+    const string state() const;
+
+    string song() const;
+
+    int timeLength() const;
+
+    string singer() const;
+
+    bool isRegistered() const;
+
+    void update(const string song, const int song_length, const string singer);
+
+    void updateRegistered(bool flag);
+
+    void updateRegistrationPhase(bool flag);
 };
 
 //---------------------------------------------------
