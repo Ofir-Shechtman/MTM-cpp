@@ -20,10 +20,9 @@ class Participant
     string song;
     int timeLength;
     string singer;
+    bool isRegistered;
     int regular_votes;
     int judge_votes;
-    bool isRegistered;
-    bool isRegistrationPhase;
 
 public:
     Participant(const string state, const string song,
@@ -31,7 +30,6 @@ public:
     ~Participant() = default;
     Participant(const Participant& p) = delete;
     Participant &operator=(const Participant& p) = delete;
-    //friend ostream &operator<<(ostream &os, const Participant &p);
     const string state() const;
     string song() const;
     int timeLength() const;
@@ -39,7 +37,6 @@ public:
     bool isRegistered() const;
     void update(const string song, const int song_length, const string singer);
     void updateRegistered(bool flag);
-    //void updateRegistrationPhase(bool flag);
 };
 
 //---------------------------------------------------
@@ -56,7 +53,6 @@ public :
     Voter(const Voter& voter) = delete;
     Voter &operator=(const Voter& voter) = delete;
     ~Voter() = default;
-    //friend ostream &operator<<(ostream &os, const Participant &p);
     Voter& operator++();
     const string state() const;
     VoterType voterType() const;
@@ -91,18 +87,43 @@ struct Vote
 
 class MainControl
 {
-// relevant private members can be defined here, if necessary.
+    const int max_time_length;
+    const int max_number_of_participants;
+    const int max_times_voter;
+    Phase phase;
+    *(Participant&)
+    array;
 
 public :
+    explicit MainControl(const int max_time_length = 180,
+                         const int max_number_of_participants = 26,
+                         const int max_times_voter = 5);
 
-// need to define here possibly c'tr and d'tr and ONLY methods that
-// are mentioned and demonstrated in the test example that has been published.
-// NO OTHER METHODS SHOULD APPEAR HERE.
+    MainControl(const MainControl &contest) = delete;
 
-// Also it's allowed here to define friend.
+    MainControl &operator=(const MainControl &contest) = delete;
+
+    ~MainControl() = default;
+
+    void setPhase(Phase);
+
+    bool participate(Participant p);
+
+    bool legalParticipant(Participant p);
+
+    MainControl &operator+=(Participant &p);
+
+    MainControl &operator-=(Participant &p);
+
+    MainControl &operator+=(Voter &voter);
 
 };
 
+ostream &operator<<(ostream &os, const Participant &p);
+
+ostream &operator<<(ostream &os, const Voter &p);
+
+ostream &operator<<(ostream &os, const MainControl &p);
 // -----------------------------------------------------------
 
 #endif

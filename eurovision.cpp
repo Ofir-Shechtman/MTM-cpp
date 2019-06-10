@@ -1,6 +1,6 @@
 #include <iostream>
-#in
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+#include "eurovision.h"
+
+Participant::Participant(const Participant &p) {
+
 }
