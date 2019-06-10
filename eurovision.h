@@ -2,7 +2,7 @@
 #define EUROVISION_H_
 
 #include <iostream>
-
+//Marcus 0
 // it's allowed to define here any using statements, according to needs.
 // do NOT define here : using namespace std;
 
