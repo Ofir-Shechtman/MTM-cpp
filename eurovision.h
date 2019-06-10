@@ -32,7 +32,7 @@ public :
 
 class Voter
 {
-/ relevant private members can be defined here, if necessary.
+// relevant private members can be defined here, if necessary.
 
 public :
 
