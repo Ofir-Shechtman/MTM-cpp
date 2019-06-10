@@ -2,10 +2,11 @@
 #define EUROVISION_H_
 
 #include <iostream>
+#include <string>
 //Marcus #1!
 // it's allowed to define here any using statements, according to needs.
 // do NOT define here : using namespace std;
-
+using std::string;
 //---------------------------------------------------
 
 enum VoterType { All, Regular, Judge };
@@ -15,9 +16,14 @@ enum Phase { Registration, Contest, Voting };
 
 class Participant
 {
-// relevant private members can be defined here, if necessary.
+    const string state;
+    string song;
+    string singer;
+    int song_length;
+    int regular_votes;
+    int judge_votes;
 
-public :
+public:
 
 // need to define here possibly c'tr and d'tr and ONLY methods that
 // are mentioned and demonstrated in the test example that has been published.
