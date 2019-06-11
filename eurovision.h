@@ -24,8 +24,8 @@ class Participant
     bool is_registered;
 
 public:
-    Participant(const string state, const string song,
-                const int timeLength, const string singer);
+    Participant(string state, string song,
+                int timeLength, string singer);
     ~Participant() = default;
     Participant(const Participant& p) = delete;
     Participant &operator=(const Participant& p) = delete;
@@ -34,7 +34,7 @@ public:
     int timeLength() const;
     string singer() const;
     bool isRegistered() const;
-    void update(const string song, const int timeLength, const string singer);
+    void update(string song, int timeLength, string singer);
     void updateRegistered(bool flag);
 };
 
@@ -47,10 +47,9 @@ class Voter
     const VoterType type;
     int times_voted;
 public :
-    explicit Voter(const string state, const VoterType type = Regular);
-    //TODO: Ask about next 2 lines
-    Voter(const Voter& voter);
-    Voter &operator=(const Voter& voter) = default;
+    explicit Voter(string state, VoterType type = Regular);
+    Voter(const Voter& voter) = delete;
+    Voter &operator=(const Voter& voter) = delete;
     ~Voter() = default;
     Voter& operator++();
     const string state() const;
@@ -65,12 +64,12 @@ struct Vote
 {
     Voter& voter;
     string* states;
-    Vote(Voter& voter, const string state0,
-                            const string state1 = "", const string state2 = "",
-                            const string state3 = "", const string state4 = "",
-                            const string state5 = "", const string state6 = "",
-                            const string state7 = "", const string state8 = "",
-                            const string state9 = "");
+    Vote(Voter& voter, string state0,
+                            string state1 = "", string state2 = "",
+                            string state3 = "", string state4 = "",
+                            string state5 = "", string state6 = "",
+                            string state7 = "", string state8 = "",
+                            string state9 = "");
     Vote(const Vote& vote);
     Vote &operator=(const Vote& vote) = delete;
     ~Vote();
@@ -92,15 +91,15 @@ class MainControl
         int regular_votes;
         int judge_votes;
         explicit ParticipantWithVotes(Participant* participant=NULL,
-                                      const int regular_votes=0, const int judge_votes=0);
+                                      int regular_votes=0, int judge_votes=0);
         ~ParticipantWithVotes() = default;
     };
     ParticipantWithVotes* participant_array;
     ParticipantWithVotes* getByState(string state) const;
 public :
-    explicit MainControl(const int max_time_length = 180,
-                         const int max_number_of_participants = 26,
-                         const int max_times_voter = 5);
+    explicit MainControl(int max_time_length = 180,
+                         int max_number_of_participants = 26,
+                         int max_times_voter = 5);
     MainControl(const MainControl &contest) = delete;
     MainControl &operator=(const MainControl &contest) = delete;
     ~MainControl();

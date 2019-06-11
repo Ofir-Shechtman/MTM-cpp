@@ -23,13 +23,13 @@ bool Participant::isRegistered() const {
 }
 void Participant::update(const string song, const int timeLength, const string singer) {
     if (!isRegistered()) {
-        if (song != "") {
+        if (!song.empty()) {
             song_name = song;
         }
-        if (timeLength != 0) {
+        if (timeLength) {
             song_length = timeLength;
         }
-        if (singer != "") {
+        if (!singer.empty()) {
             singer_name = singer;
         }
     }
@@ -55,11 +55,6 @@ Voter::Voter(const string state, const VoterType type):
     type(type),
     times_voted(0){}
 
-Voter::Voter(const Voter& voter):
-        state_name(voter.state_name),
-        type(voter.type),
-        times_voted(voter.times_voted)
-        {}
 
 Voter& Voter::operator++(){
     ++times_voted;
@@ -141,7 +136,10 @@ MainControl::~MainControl(){
 }
 
 void MainControl::setPhase(Phase new_phase){
-    phase=new_phase;
+    if(phase==Registration && new_phase==Contest)
+        phase=Contest;
+    if(phase==Contest && new_phase==Voting)
+        phase=Voting;
 }
 bool MainControl::participate(string participant_name){
     return getByState(participant_name) != NULL;
