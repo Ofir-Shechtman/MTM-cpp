@@ -193,7 +193,7 @@ ostream &operator<<(ostream &os, const MainControl &mc){
     [UK/Song_UK/170/Singer_UK]
     }
      */
-    os << "{" << endl;
+    os << "{" << endl << mc.phase << endl;
     string * states_names= new string[mc.max_number_of_participants];
     int counter=0;
     for(int i=0; i<mc.max_number_of_participants; i++){
