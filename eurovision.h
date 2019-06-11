@@ -7,6 +7,7 @@
 // do NOT define here : using namespace std;
 using std::string;
 using std::ostream;
+using std::endl;
 //---------------------------------------------------
 
 enum VoterType { All, Regular, Judge };
@@ -94,7 +95,7 @@ class MainControl
     const int max_times_voter;
     Phase phase;
     ParticipantWithVotes* participant_array;
-
+    ParticipantWithVotes* getByState(string state);
 public :
     explicit MainControl(const int max_time_length = 180,
                          const int max_number_of_participants = 26,
@@ -107,7 +108,7 @@ public :
     bool legalParticipant(Participant p);
     MainControl &operator+=(Participant &p);
     MainControl &operator-=(Participant &p);
-    MainControl &operator+=(Voter &voter);
+    MainControl &operator+=(Vote &vote);
 
 };
 

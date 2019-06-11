@@ -1,6 +1,7 @@
 #include <iostream>
 #include "eurovision.h"
 
+
 Participant::Participant(const string state, const string song,
             const int timeLength, const string singer):
             state_name(state), song_name(song), song_length(timeLength),
@@ -66,6 +67,15 @@ int Voter::timesOfVotes() const{
     return times_voted;
 }
 
+ostream &operator<<(ostream &os, const Voter &vr){
+    //<Israel/Judge>
+    os << "<";
+    os << vr.state() << "/";
+    os << vr.voterType();
+    os << ">" << endl;
+    return os;
+}
+
 Vote::Vote(const Voter& voter, const string state0,
            const string state1, const string state2,
            const string state3, const string state4,
@@ -102,3 +112,53 @@ MainControl::MainControl(const int max_time_length,
 MainControl::~MainControl(){
     delete[] participant_array;
 }
+
+bool MainControl::legalParticipant(Participant p){
+    if(p.state() == "" || p.song() == "" || p.singer() == "") return false;
+    if(p.timeLength() > max_time_length || p.timeLength()<=0) return false;
+    return true;
+}
+
+Participant* MainControl::getByState(string state){
+    for(int i=0; i < max_number_of_participants; i++){
+        Participant* cur_p = participant_array[i].participant;
+        if (cur_p->state() == state)
+            return cur_p;
+    }
+    return NULL;
+}
+
+MainControl& MainControl::operator+=(Vote &vote){
+    string voter_state = vote.voter.state();
+    if (!getByState(voter_state))
+        return *this;
+    for(int i=0; i<10; i++){
+        string cur_state = vote.states[i];
+        if(cur_state.empty())
+            break;
+        if(voter_state == cur_state)
+            return *this;
+        if(!getByState(cur_state))
+            return *this;
+    }
+    if(vote.voter.timesOfVotes() >= max_times_voter)
+        return *this;
+
+    ++vote.voter;
+    if(vote.voter.voterType() == Regular){
+        string vote_to = vote.states[0];
+        getByState(vote_to)->regular_votes++;
+    }
+    if(vote.voter.voterType() == Judge){
+        for(int i=0; i < 10; i++){
+            string vote_to = vote.states[i];
+            if(vote_to.empty())
+                break;
+            if(i ==0) getByState(vote_to)->judge_votes += 12;
+            if(i == 1) getByState(vote_to)->judge_votes += 10;
+            getByState(vote_to)->judge_votes += 10-i;
+        }
+    }
+    return *this;
+}
+
