@@ -45,7 +45,7 @@ public:
 class Voter
 {
     const string state;
-    VoterType type;
+    const VoterType type;
     int timesOfVotes;
 public :
     explicit Voter(const string state, const VoterType type = Regular);
@@ -98,31 +98,20 @@ public :
     explicit MainControl(const int max_time_length = 180,
                          const int max_number_of_participants = 26,
                          const int max_times_voter = 5);
-
     MainControl(const MainControl &contest) = delete;
-
     MainControl &operator=(const MainControl &contest) = delete;
-
     ~MainControl() = default;
-
     void setPhase(Phase);
-
     bool participate(Participant p);
-
     bool legalParticipant(Participant p);
-
     MainControl &operator+=(Participant &p);
-
     MainControl &operator-=(Participant &p);
-
     MainControl &operator+=(Voter &voter);
 
 };
 
 ostream &operator<<(ostream &os, const Participant &p);
-
 ostream &operator<<(ostream &os, const Voter &p);
-
 ostream &operator<<(ostream &os, const MainControl &p);
 // -----------------------------------------------------------
 
