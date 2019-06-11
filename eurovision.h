@@ -77,14 +77,7 @@ struct Vote
 };
 
 
-struct ParticipantWithVotes{
-    Participant* participant;
-    int regular_votes;
-    int judge_votes;
-    explicit ParticipantWithVotes(Participant* participant=NULL,
-                   const int regular_votes=0, const int judge_votes=0);
-    ~ParticipantWithVotes() = default;
-};
+
 
 // -----------------------------------------------------------
 
@@ -94,6 +87,14 @@ class MainControl
     const int max_number_of_participants;
     const int max_times_voter;
     Phase phase;
+    struct ParticipantWithVotes{
+        Participant* participant;
+        int regular_votes;
+        int judge_votes;
+        explicit ParticipantWithVotes(Participant* participant=NULL,
+                                      const int regular_votes=0, const int judge_votes=0);
+        ~ParticipantWithVotes() = default;
+    };
     ParticipantWithVotes* participant_array;
     ParticipantWithVotes* getByState(string state) const;
 public :

@@ -119,7 +119,7 @@ Vote::Vote(const Vote& vote):
     }
 }
 
-ParticipantWithVotes::ParticipantWithVotes(Participant* participant,
+MainControl::ParticipantWithVotes::ParticipantWithVotes(Participant* participant,
                               const int regular_votes, const int judge_votes):
 regular_votes(regular_votes),
 judge_votes(judge_votes),
@@ -231,12 +231,12 @@ ostream &operator<<(ostream &os, const MainControl &mc){
 }
 
 bool MainControl::legalParticipant(Participant& p){
-    if(p.state() == "" || p.song() == "" || p.singer() == "") return false;
+    if(p.state().empty() || p.song().empty() || p.singer().empty()) return false;
     if(p.timeLength() > max_time_length || p.timeLength()<=0) return false;
     return true;
 }
 
-ParticipantWithVotes* MainControl::getByState(string state) const{
+MainControl::ParticipantWithVotes* MainControl::getByState(string state) const{
     for(int i=0; i < max_number_of_participants; i++){
         Participant* cur_p = participant_array[i].participant;
         if (cur_p != NULL && cur_p->state() == state)
