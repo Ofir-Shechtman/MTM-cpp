@@ -1,7 +1,6 @@
 #include <iostream>
 #include "eurovision.h"
 
-
 Participant::Participant(const string state, const string song,
             const int timeLength, const string singer):
             state_name(state), song_name(song), song_length(timeLength),
@@ -56,6 +55,7 @@ Voter::Voter(const string state, const VoterType type):
     type(type) {}
 Voter& Voter::operator++(){
     ++times_voted;
+    return *this;
 }
 const string Voter::state() const{
     return state_name;
@@ -84,15 +84,17 @@ Vote::Vote(const Voter& voter, const string state0,
            const string state9 ): voter(voter){
     states = new string[10];
     states[0] = state0;
-    states[1] = state1;
-    states[2] = state2;
-    states[3] = state3;
-    states[4] = state4;
-    states[5] = state5;
-    states[6] = state6;
-    states[7] = state7;
-    states[8] = state8;
-    states[9] = state9;
+    if(voter.voterType()==Judge) {
+        states[1] = state1;
+        states[2] = state2;
+        states[3] = state3;
+        states[4] = state4;
+        states[5] = state5;
+        states[6] = state6;
+        states[7] = state7;
+        states[8] = state8;
+        states[9] = state9;
+    }
 }
 
 
@@ -113,17 +115,79 @@ MainControl::~MainControl(){
     delete[] participant_array;
 }
 
-bool MainControl::legalParticipant(Participant p){
+void MainControl::setPhase(Phase new_phase){
+    phase=new_phase;
+}
+bool MainControl::participate(string participant_name){
+    return getByState(participant_name) != NULL;
+}
+
+MainControl& MainControl::operator+=(Participant& p){
+    if(participate(p.state()) || !legalParticipant(p)) return *this;
+    for(int i=0; i<max_number_of_participants; i++){
+        if(participant_array[i].participant==NULL){
+            participant_array[i].participant=&p;
+            p.updateRegistered(true);
+            break;
+        }
+    }
+    return *this;
+}
+
+MainControl& MainControl::operator-=(Participant &p){
+    for(int i=0; i<max_number_of_participants; i++){
+        Participant* cur_p= participant_array[i].participant;
+        if(cur_p!=NULL && cur_p->state() == p.state()){
+            participant_array[i].participant =NULL;
+            participant_array[i].judge_votes =0;
+            participant_array[i].regular_votes =0;
+            p.updateRegistered(false);
+            break;
+        }
+    }
+    return *this;
+}
+
+
+ostream &operator<<(ostream &os, const MainControl &mc){
+    /*
+    {
+    Registration
+    [Australia/Song_Australia/180/Singer_Australia]
+    [Cyprus/Song_Cyprus/172/Singer_Cyprus]
+    [Israel/Song_Israel/175/Singer_Israel]
+    [UK/Song_UK/170/Singer_UK]
+    }
+     */
+    os << "{" << endl;
+    string min="";
+    bool flag= true;
+    while(flag) {
+        flag = false;
+        for (int i = 0; i < mc.max_number_of_participants; i++) {
+            Participant *cur_p = mc.participant_array[i].participant;
+            if (cur_p->state() < min) {
+                os << *cur_p << endl;
+                min = cur_p->state();
+                flag = true;
+            }
+        }
+    }
+    os << "}" << endl;
+    return os;
+}
+
+bool MainControl::legalParticipant(Participant& p){
     if(p.state() == "" || p.song() == "" || p.singer() == "") return false;
     if(p.timeLength() > max_time_length || p.timeLength()<=0) return false;
     return true;
 }
 
-Participant* MainControl::getByState(string state){
+ParticipantWithVotes* MainControl::getByState(string state){
     for(int i=0; i < max_number_of_participants; i++){
         Participant* cur_p = participant_array[i].participant;
         if (cur_p->state() == state)
-            return cur_p;
+            return &participant_array[i];
     }
     return NULL;
 }

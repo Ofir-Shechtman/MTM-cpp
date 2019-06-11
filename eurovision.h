@@ -103,18 +103,19 @@ public :
     MainControl(const MainControl &contest) = delete;
     MainControl &operator=(const MainControl &contest) = delete;
     ~MainControl();
-    void setPhase(Phase);
-    bool participate(Participant p);
-    bool legalParticipant(Participant p);
-    MainControl &operator+=(Participant &p);
-    MainControl &operator-=(Participant &p);
-    MainControl &operator+=(Vote &vote);
+    void setPhase(Phase new_phase);
+    bool participate(string participant_name);
+    bool legalParticipant(Participant& p);
+    MainControl &operator+=(Participant& p);
+    MainControl &operator-=(Participant& p);
+    MainControl &operator+=(Vote& vote);
+    friend ostream &operator<<(ostream &os, const MainControl &mc);
 
 };
 
 ostream &operator<<(ostream &os, const Participant &p);
-ostream &operator<<(ostream &os, const Voter &p);
-ostream &operator<<(ostream &os, const MainControl &p);
+ostream &operator<<(ostream &os, const Voter &voter);
+ostream &operator<<(ostream &os, const MainControl &mc);
 // -----------------------------------------------------------
 
 #endif
