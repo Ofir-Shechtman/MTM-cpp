@@ -71,9 +71,9 @@ struct Vote
                             const string state5 = "", const string state6 = "",
                             const string state7 = "", const string state8 = "",
                             const string state9 = "");
-    Vote(const Vote& vote) = delete;
+    Vote(const Vote& vote);
     Vote &operator=(const Vote& vote) = delete;
-    ~Vote() = default;
+    ~Vote();
 };
 
 
@@ -81,7 +81,7 @@ struct ParticipantWithVotes{
     Participant* participant;
     int regular_votes;
     int judge_votes;
-    explicit ParticipantWithVotes(const Participant* participant=NULL,
+    explicit ParticipantWithVotes(Participant* participant=NULL,
                    const int regular_votes=0, const int judge_votes=0);
     ~ParticipantWithVotes() = default;
 };
@@ -108,7 +108,7 @@ public :
     bool legalParticipant(Participant& p);
     MainControl &operator+=(Participant& p);
     MainControl &operator-=(Participant& p);
-    MainControl &operator+=(Vote& vote);
+    MainControl &operator+=(Vote vote);
     friend ostream &operator<<(ostream &os, const MainControl &mc);
 
 };

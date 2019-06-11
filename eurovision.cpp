@@ -97,8 +97,24 @@ Vote::Vote(const Voter& voter, const string state0,
     }
 }
 
+Vote::~Vote() {
+    delete[] states;
+}
 
+Vote::Vote(const Vote& vote):
+    voter(vote.voter),
+    states(new string[10])
+{
+    for(int i=0; i<10; i++){
+        states[i]= vote.states[i];
+    }
+}
 
+ParticipantWithVotes::ParticipantWithVotes(Participant* participant,
+                              const int regular_votes, const int judge_votes):
+regular_votes(regular_votes),
+judge_votes(judge_votes),
+participant(participant){};
 
 MainControl::MainControl(const int max_time_length,
             const int max_number_of_participants,
@@ -192,7 +208,7 @@ ParticipantWithVotes* MainControl::getByState(string state){
     return NULL;
 }
 
-MainControl& MainControl::operator+=(Vote &vote){
+MainControl& MainControl::operator+=(Vote vote){
     string voter_state = vote.voter.state();
     if (!getByState(voter_state))
         return *this;

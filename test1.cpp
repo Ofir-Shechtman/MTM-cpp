@@ -277,6 +277,8 @@ TEST("1.11")
 
 
 TEST("1.12")
+    Vote v=Vote(vr1, "Israel");
+    eurovision += v;
     eurovision += Vote(vr1, "Israel"); // Illegal. Not counted. vr1 is from Israel, therefore
     //Todo: need to understand if possible to remove votes
 /* a voter can not vote for his own state.
