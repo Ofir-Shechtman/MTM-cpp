@@ -148,8 +148,10 @@ bool MainControl::participate(string participant_name){
 }
 
 MainControl& MainControl::operator+=(Participant& p){
-    if(phase != Registration) return *this;
-    if(participate(p.state()) || !legalParticipant(p)) return *this;
+    if(phase != Registration)
+        return *this;
+    if(participate(p.state()) || !legalParticipant(p))
+        return *this;
     for(int i=0; i<max_number_of_participants; i++){
         if(participant_array[i].participant==NULL){
             participant_array[i].participant=&p;
@@ -161,7 +163,8 @@ MainControl& MainControl::operator+=(Participant& p){
 }
 
 MainControl& MainControl::operator-=(Participant &p){
-    if(phase != Registration) return *this;
+    if(phase != Registration)
+        return *this;
     for(int i=0; i<max_number_of_participants; i++){
         Participant* cur_p= participant_array[i].participant;
         if(cur_p!=NULL && cur_p->state() == p.state()){
@@ -231,8 +234,10 @@ ostream &operator<<(ostream &os, const MainControl &mc){
 }
 
 bool MainControl::legalParticipant(Participant& p){
-    if(p.state().empty() || p.song().empty() || p.singer().empty()) return false;
-    if(p.timeLength() > max_time_length || p.timeLength()<=0) return false;
+    if(p.state().empty() || p.song().empty() || p.singer().empty())
+        return false;
+    if(p.timeLength() > max_time_length || p.timeLength()<=0)
+        return false;
     return true;
 }
 
@@ -271,9 +276,12 @@ MainControl& MainControl::operator+=(Vote vote){
             string vote_to = vote.states[i];
             if(vote_to.empty())
                 break;
-            if(i ==0) getByState(vote_to)->judge_votes += 12;
-            else if(i == 1) getByState(vote_to)->judge_votes += 10;
-            else getByState(vote_to)->judge_votes += 10-i;
+            if(i ==0)
+                getByState(vote_to)->judge_votes += 12;
+            else if(i == 1)
+                getByState(vote_to)->judge_votes += 10;
+            else
+                getByState(vote_to)->judge_votes += 10-i;
         }
     }
     return *this;
