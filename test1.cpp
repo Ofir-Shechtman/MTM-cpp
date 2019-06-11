@@ -253,7 +253,7 @@ TEST("1.10")
 */
 
 TEST("1.11")
- cout << vr1.state() << endl;  // Israel
+ cout << vr1.state_name() << endl;  // Israel
  cout << (vr1.voterType() == Regular) << endl;  // 1 (bool)
 
  cout << vr1 << endl;  // will display <Israel/Regular>
@@ -323,7 +323,7 @@ TEST("1.14")
 
   cout << eurovision << endl;
 
-  cout << vr1.timesOfVotes() << endl;  // 5
+  cout << vr1.times_voted() << endl;  // 5
 
   ++vr1; // this operation increments the number of times that vr1 has voted.
          // although it's a public method, we assume that it will be use ONLY internally
