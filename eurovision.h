@@ -16,15 +16,15 @@ enum Phase { Registration, Contest, Voting };
 
 class Participant
 {
-    const string state;
-    string song;
-    int timeLength;
-    string singer;
-    bool isRegistered;
+    const string state_name;
+    string song_name;
+    int song_length;
+    string singer_name;
+    bool is_registered;
 
 public:
     Participant(const string state, const string song,
-                const int song_length, const string singer);
+                const int timeLength, const string singer);
     ~Participant() = default;
     Participant(const Participant& p) = delete;
     Participant &operator=(const Participant& p) = delete;
@@ -33,7 +33,7 @@ public:
     int timeLength() const;
     string singer() const;
     bool isRegistered() const;
-    void update(const string song, const int song_length, const string singer);
+    void update(const string song, const int timeLength, const string singer);
     void updateRegistered(bool flag);
 };
 
@@ -93,7 +93,7 @@ class MainControl
     const int max_number_of_participants;
     const int max_times_voter;
     Phase phase;
-    ParticipantWithVotes* states;
+    ParticipantWithVotes* participant_array;
 
 public :
     explicit MainControl(const int max_time_length = 180,
