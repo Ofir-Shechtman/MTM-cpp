@@ -164,6 +164,24 @@ MainControl& MainControl::operator-=(Participant &p){
     return *this;
 }
 
+int findMaxIdx(string* strings, int n){
+    string max ="";
+    int max_idx = -1;
+    for(int i=0; i<n; i++){
+        if(strings[i].compare(max)>=0) {
+            max = strings[i];
+            max_idx = i;
+        }
+    }
+    return max_idx;
+}
+
+void stringSort(string* strings, int n){
+    for(int len=n; len>0; len--){
+        int max_idx = findMaxIdx(strings,len);
+        strings[max_idx].swap(strings[len-1]);
+    }
+}
 
 ostream &operator<<(ostream &os, const MainControl &mc){
     /*
@@ -176,19 +194,19 @@ ostream &operator<<(ostream &os, const MainControl &mc){
     }
      */
     os << "{" << endl;
-    string min="";
-    bool flag= true;
-    while(flag) {
-        flag = false;
-        for (int i = 0; i < mc.max_number_of_participants; i++) {
-            Participant *cur_p = mc.participant_array[i].participant;
-            if (cur_p->state() < min) {
-                os << *cur_p << endl;
-                min = cur_p->state();
-                flag = true;
-            }
+    string * states_names= new string[mc.max_number_of_participants];
+    int counter=0;
+    for(int i=0; i<mc.max_number_of_participants; i++){
+        if(mc.participant_array[i].participant != NULL) {
+            states_names[counter] = mc.participant_array[i].participant->state();
+            counter++;
         }
     }
+    stringSort(states_names,counter);
+    for(int i=0; i<counter; i++) {
+        os << *(mc.getByState(states_names[i])->participant);
+    }
+    delete[] states_names;
     os << "}" << endl;
     return os;
 }
@@ -199,10 +217,10 @@ bool MainControl::legalParticipant(Participant& p){
     return true;
 }
 
-ParticipantWithVotes* MainControl::getByState(string state){
+ParticipantWithVotes* MainControl::getByState(string state) const{
     for(int i=0; i < max_number_of_participants; i++){
         Participant* cur_p = participant_array[i].participant;
-        if (cur_p->state() == state)
+        if (cur_p != NULL && cur_p->state() == state)
             return &participant_array[i];
     }
     return NULL;
@@ -241,4 +259,3 @@ MainControl& MainControl::operator+=(Vote vote){
     }
     return *this;
 }
-

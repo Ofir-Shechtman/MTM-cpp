@@ -95,7 +95,7 @@ class MainControl
     const int max_times_voter;
     Phase phase;
     ParticipantWithVotes* participant_array;
-    ParticipantWithVotes* getByState(string state);
+    ParticipantWithVotes* getByState(string state) const;
 public :
     explicit MainControl(const int max_time_length = 180,
                          const int max_number_of_participants = 26,
