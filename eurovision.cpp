@@ -83,7 +83,6 @@ Vote::Vote(const Voter& voter, const string state0,
     states[7] = state7;
     states[8] = state8;
     states[9] = state9;
-
 }
 
 
