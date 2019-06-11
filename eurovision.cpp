@@ -46,13 +46,21 @@ ostream &operator<<(ostream &os, const Participant &p){
     os << p.song() << "/";
     os << p.timeLength() << "/";
     os << p.singer();
-    os << "]" << endl;
+    os << "]";
     return os;
 }
 
 Voter::Voter(const string state, const VoterType type):
     state_name(state),
-    type(type) {}
+    type(type),
+    times_voted(0){}
+
+Voter::Voter(const Voter& voter):
+        state_name(voter.state_name),
+        type(voter.type),
+        times_voted(voter.times_voted)
+        {}
+
 Voter& Voter::operator++(){
     ++times_voted;
     return *this;
@@ -69,14 +77,15 @@ int Voter::timesOfVotes() const{
 
 ostream &operator<<(ostream &os, const Voter &vr){
     //<Israel/Judge>
+    string voter_type[3]= {"All", "Regular", "Judge"};
     os << "<";
     os << vr.state() << "/";
-    os << vr.voterType();
-    os << ">" << endl;
+    os << voter_type[vr.voterType()];
+    os << ">";
     return os;
 }
 
-Vote::Vote(const Voter& voter, const string state0,
+Vote::Vote(Voter& voter, const string state0,
            const string state1, const string state2,
            const string state3, const string state4,
            const string state5 , const string state6,
@@ -139,6 +148,7 @@ bool MainControl::participate(string participant_name){
 }
 
 MainControl& MainControl::operator+=(Participant& p){
+    if(phase != Registration) return *this;
     if(participate(p.state()) || !legalParticipant(p)) return *this;
     for(int i=0; i<max_number_of_participants; i++){
         if(participant_array[i].participant==NULL){
@@ -151,6 +161,7 @@ MainControl& MainControl::operator+=(Participant& p){
 }
 
 MainControl& MainControl::operator-=(Participant &p){
+    if(phase != Registration) return *this;
     for(int i=0; i<max_number_of_participants; i++){
         Participant* cur_p= participant_array[i].participant;
         if(cur_p!=NULL && cur_p->state() == p.state()){
@@ -186,14 +197,15 @@ void stringSort(string* strings, int n){
 ostream &operator<<(ostream &os, const MainControl &mc){
     /*
     {
-    Registration
-    [Australia/Song_Australia/180/Singer_Australia]
-    [Cyprus/Song_Cyprus/172/Singer_Cyprus]
-    [Israel/Song_Israel/175/Singer_Israel]
-    [UK/Song_UK/170/Singer_UK]
+    Voting
+    Australia : Regular(0) Judge(8)
+    Cyprus : Regular(7) Judge(12)
+    Israel : Regular(1) Judge(0)
+    UK : Regular(1) Judge(10)
     }
-     */
-    os << "{" << endl << mc.phase << endl;
+    */
+    string phases[3]= {"Registration", "Contest", "Voting"};
+    os << "{" << endl << phases[mc.phase] << endl;
     string * states_names= new string[mc.max_number_of_participants];
     int counter=0;
     for(int i=0; i<mc.max_number_of_participants; i++){
@@ -204,7 +216,14 @@ ostream &operator<<(ostream &os, const MainControl &mc){
     }
     stringSort(states_names,counter);
     for(int i=0; i<counter; i++) {
-        os << *(mc.getByState(states_names[i])->participant);
+        if(mc.phase==Registration)
+            os << *(mc.getByState(states_names[i])->participant) << endl;
+        else if(mc.phase==Voting) {
+            int regular = mc.getByState(states_names[i])->regular_votes;
+            int judge = mc.getByState(states_names[i])->judge_votes;
+            os << states_names[i] << " : Regular(" << regular << ") Judge("
+               << judge << ")" << endl;
+        }
     }
     delete[] states_names;
     os << "}" << endl;
@@ -242,7 +261,7 @@ MainControl& MainControl::operator+=(Vote vote){
     if(vote.voter.timesOfVotes() >= max_times_voter)
         return *this;
 
-    ++vote.voter;
+    ++(vote.voter);
     if(vote.voter.voterType() == Regular){
         string vote_to = vote.states[0];
         getByState(vote_to)->regular_votes++;
@@ -253,8 +272,8 @@ MainControl& MainControl::operator+=(Vote vote){
             if(vote_to.empty())
                 break;
             if(i ==0) getByState(vote_to)->judge_votes += 12;
-            if(i == 1) getByState(vote_to)->judge_votes += 10;
-            getByState(vote_to)->judge_votes += 10-i;
+            else if(i == 1) getByState(vote_to)->judge_votes += 10;
+            else getByState(vote_to)->judge_votes += 10-i;
         }
     }
     return *this;
