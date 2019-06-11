@@ -65,29 +65,24 @@ struct Vote
     Voter voter;
     string state[10];
     Vote(const Voter& voter, const string state0,
-                            const string state1 = NULL, const string state2 = NULL,
-                            const string state3 = NULL, const string state4 = NULL,
-                            const string state5 = NULL, const string state6 = NULL,
-                            const string state7 = NULL, const string state8 = NULL,
-                            const string state9 = NULL);
+                            const string state1 = "", const string state2 = "",
+                            const string state3 = "", const string state4 = "",
+                            const string state5 = "", const string state6 = "",
+                            const string state7 = "", const string state8 = "",
+                            const string state9 = "");
     Vote(const Vote& vote) = delete;
     Vote &operator=(const Vote& vote) = delete;
     ~Vote() = default;
-
-// ALL is public here.
-// need to define ONLY data members and c'tr and d'tr.
-// NO NEED to define anything else.
-
 };
 
 
-struct State{
+struct ParticipantWithVotes{
     Participant* participant;
     int regular_votes;
     int judge_votes;
-    explicit State(const Participant* participant=NULL,
+    explicit ParticipantWithVotes(const Participant* participant=NULL,
                    const int regular_votes=0, const int judge_votes=0);
-    ~State() = default;
+    ~ParticipantWithVotes() = default;
 };
 
 // -----------------------------------------------------------
@@ -98,7 +93,7 @@ class MainControl
     const int max_number_of_participants;
     const int max_times_voter;
     Phase phase;
-    State* states;
+    ParticipantWithVotes* states;
 
 public :
     explicit MainControl(const int max_time_length = 180,

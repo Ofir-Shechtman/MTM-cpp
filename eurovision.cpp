@@ -13,7 +13,7 @@ MainControl::MainControl(const int max_time_length,
             max_times_voter(max_times_voter),
             phase(Registration)
             {
-    states= new State[max_number_of_participants];
+    states= new ParticipantWithVotes[max_number_of_participants];
 }
 
 MainControl::~MainControl(){
