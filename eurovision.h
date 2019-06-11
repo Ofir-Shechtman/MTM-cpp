@@ -21,8 +21,6 @@ class Participant
     int timeLength;
     string singer;
     bool isRegistered;
-    int regular_votes;
-    int judge_votes;
 
 public:
     Participant(const string state, const string song,
@@ -82,8 +80,17 @@ struct Vote
 
 };
 
-// -----------------------------------------------------------
 
+struct State{
+    Participant* participant;
+    int regular_votes;
+    int judge_votes;
+    explicit State(const Participant* participant=NULL,
+                   const int regular_votes=0, const int judge_votes=0);
+    ~State() = default;
+};
+
+// -----------------------------------------------------------
 
 class MainControl
 {
@@ -91,8 +98,7 @@ class MainControl
     const int max_number_of_participants;
     const int max_times_voter;
     Phase phase;
-    *(Participant&)
-    array;
+    State* states;
 
 public :
     explicit MainControl(const int max_time_length = 180,
@@ -100,7 +106,7 @@ public :
                          const int max_times_voter = 5);
     MainControl(const MainControl &contest) = delete;
     MainControl &operator=(const MainControl &contest) = delete;
-    ~MainControl() = default;
+    ~MainControl();
     void setPhase(Phase);
     bool participate(Participant p);
     bool legalParticipant(Participant p);
