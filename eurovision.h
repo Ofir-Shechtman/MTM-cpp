@@ -42,14 +42,14 @@ public:
 
 class Voter
 {
-    const string state;
+    const string state_name;
     const VoterType type;
-    int timesOfVotes;
+    int times_voted;
 public :
     explicit Voter(const string state, const VoterType type = Regular);
     //TODO: Ask about next 2 lines
-    Voter(const Voter& voter) = delete;
-    Voter &operator=(const Voter& voter) = delete;
+    Voter(const Voter& voter) = default;
+    Voter &operator=(const Voter& voter) = default;
     ~Voter() = default;
     Voter& operator++();
     const string state() const;
@@ -63,7 +63,7 @@ public :
 struct Vote
 {
     Voter voter;
-    string state[10];
+    string* states;
     Vote(const Voter& voter, const string state0,
                             const string state1 = "", const string state2 = "",
                             const string state3 = "", const string state4 = "",
