@@ -141,8 +141,8 @@ MainControl& MainControl::operator+=(Participant& p){
         return *this;
     for(int i=0; i<max_number_of_participants; i++){
         if(participant_array[i].participant== nullptr){
-            participant_array[i].participant=&p;
             p.updateRegistered(true);
+            participant_array[i]= ParticipantWithVotes(&p);
             break;
         }
     }

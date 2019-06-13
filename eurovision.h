@@ -94,6 +94,8 @@ class MainControl
         explicit ParticipantWithVotes(Participant* participant= nullptr,
                                       int regular_votes=0, int judge_votes=0);
         ~ParticipantWithVotes() = default;
+        ParticipantWithVotes &operator=(const ParticipantWithVotes &pwv) = default;
+        ParticipantWithVotes(const ParticipantWithVotes &pwv) = delete;
     };
     ParticipantWithVotes* participant_array;
     ParticipantWithVotes* getByState(string state) const;
