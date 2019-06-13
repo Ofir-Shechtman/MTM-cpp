@@ -85,25 +85,10 @@ Vote::Vote(Voter& voter, const string state0,
            const string state3, const string state4,
            const string state5 , const string state6,
            const string state7 , const string state8,
-           const string state9 ): voter(voter){
-    states = new string[10];
-    states[0] = state0;
-    if(voter.voterType()==Judge) {
-        states[1] = state1;
-        states[2] = state2;
-        states[3] = state3;
-        states[4] = state4;
-        states[5] = state5;
-        states[6] = state6;
-        states[7] = state7;
-        states[8] = state8;
-        states[9] = state9;
-    }
-}
-
-Vote::~Vote() {
-    delete[] states;
-}
+           const string state9 ): voter(voter),
+           states(new string[10]{state0, state1, state2, state3, state4,
+                  state5,state6, state7, state8, state9})
+           {}
 
 Vote::Vote(const Vote& vote):
     voter(vote.voter),
@@ -113,6 +98,11 @@ Vote::Vote(const Vote& vote):
         states[i]= vote.states[i];
     }
 }
+
+Vote::~Vote() {
+    delete[] states;
+}
+
 
 MainControl::ParticipantWithVotes::ParticipantWithVotes(Participant* participant,
                               const int regular_votes, const int judge_votes):
@@ -126,10 +116,9 @@ MainControl::MainControl(const int max_time_length,
             max_time_length(max_time_length),
             max_number_of_participants(max_number_of_participants),
             max_times_voter(max_times_voter),
-            phase(Registration)
-            {
-    participant_array= new ParticipantWithVotes[max_number_of_participants];
-}
+            phase(Registration),
+            participant_array(new ParticipantWithVotes[max_number_of_participants])
+            {};
 
 MainControl::~MainControl(){
     delete[] participant_array;
@@ -141,8 +130,8 @@ void MainControl::setPhase(Phase new_phase){
     if(phase==Contest && new_phase==Voting)
         phase=Voting;
 }
-bool MainControl::participate(string participant_name){
-    return getByState(participant_name) != NULL;
+bool MainControl::participate(const string participant_name){
+    return getByState(participant_name) != nullptr;
 }
 
 MainControl& MainControl::operator+=(Participant& p){
@@ -151,7 +140,7 @@ MainControl& MainControl::operator+=(Participant& p){
     if(participate(p.state()) || !legalParticipant(p))
         return *this;
     for(int i=0; i<max_number_of_participants; i++){
-        if(participant_array[i].participant==NULL){
+        if(participant_array[i].participant== nullptr){
             participant_array[i].participant=&p;
             p.updateRegistered(true);
             break;
@@ -166,7 +155,7 @@ MainControl& MainControl::operator-=(Participant &p){
     for(int i=0; i<max_number_of_participants; i++){
         Participant* cur_p= participant_array[i].participant;
         if(cur_p==&p){
-            participant_array[i].participant =NULL;
+            participant_array[i].participant = nullptr;
             participant_array[i].judge_votes =0;
             participant_array[i].regular_votes =0;
             p.updateRegistered(false);
@@ -177,7 +166,7 @@ MainControl& MainControl::operator-=(Participant &p){
 }
 
 int findMaxIdx(string* strings, int n){
-    string max ="";
+    string max; //max=""
     int max_idx = -1;
     for(int i=0; i<n; i++){
         if(strings[i].compare(max)>=0) {
@@ -207,10 +196,10 @@ ostream &operator<<(ostream &os, const MainControl &mc){
     */
     string phases[3]= {"Registration", "Contest", "Voting"};
     os << "{" << endl << phases[mc.phase] << endl;
-    string* states_names= new string[mc.max_number_of_participants];
+    auto* states_names= new string[mc.max_number_of_participants];
     int counter=0;
     for(int i=0; i<mc.max_number_of_participants; i++){
-        if(mc.participant_array[i].participant != NULL) {
+        if(mc.participant_array[i].participant != nullptr) {
             states_names[counter] = mc.participant_array[i].participant->state();
             counter++;
         }
@@ -234,16 +223,16 @@ ostream &operator<<(ostream &os, const MainControl &mc){
 bool MainControl::legalParticipant(Participant& p){
     if(p.state().empty() || p.song().empty() || p.singer().empty())
         return false;
-    return !(p.timeLength() > max_time_length || p.timeLength() <= 0);
+    return (p.timeLength() < max_time_length && p.timeLength() > 0);
 }
 
 MainControl::ParticipantWithVotes* MainControl::getByState(string state) const{
     for(int i=0; i < max_number_of_participants; i++){
         Participant* cur_p = participant_array[i].participant;
-        if (cur_p != NULL && cur_p->state() == state)
+        if (cur_p != nullptr && cur_p->state() == state)
             return &participant_array[i];
     }
-    return NULL;
+    return nullptr;
 }
 
 MainControl& MainControl::operator+=(Vote vote){

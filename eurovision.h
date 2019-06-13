@@ -66,11 +66,11 @@ struct Vote
     Voter& voter;
     string* states;
     Vote(Voter& voter, string state0,
-                            string state1 = "", string state2 = "",
-                            string state3 = "", string state4 = "",
-                            string state5 = "", string state6 = "",
-                            string state7 = "", string state8 = "",
-                            string state9 = "");
+         string state1 = "", string state2 = "",
+         string state3 = "", string state4 = "",
+         string state5 = "", string state6 = "",
+         string state7 = "", string state8 = "",
+         string state9 = "");
     Vote(const Vote& vote);
     Vote &operator=(const Vote& vote) = delete;
     ~Vote();
@@ -91,7 +91,7 @@ class MainControl
         Participant* participant;
         int regular_votes;
         int judge_votes;
-        explicit ParticipantWithVotes(Participant* participant=NULL,
+        explicit ParticipantWithVotes(Participant* participant= nullptr,
                                       int regular_votes=0, int judge_votes=0);
         ~ParticipantWithVotes() = default;
     };
