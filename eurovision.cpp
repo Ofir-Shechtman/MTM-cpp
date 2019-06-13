@@ -165,7 +165,7 @@ MainControl& MainControl::operator-=(Participant &p){
         return *this;
     for(int i=0; i<max_number_of_participants; i++){
         Participant* cur_p= participant_array[i].participant;
-        if(cur_p!=NULL && cur_p->state() == p.state()){
+        if(cur_p==&p){
             participant_array[i].participant =NULL;
             participant_array[i].judge_votes =0;
             participant_array[i].regular_votes =0;
@@ -256,28 +256,32 @@ MainControl& MainControl::operator+=(Vote vote){
         string cur_state = vote.states[i];
         if(cur_state.empty())
             break;
-        if(voter_state == cur_state)
-            return *this;
-        if(!getByState(cur_state))
-            return *this;
+        //if(voter_state == cur_state)
+        //    return *this;
     }
-    if(vote.voter.timesOfVotes() >= max_times_voter)
+    if(vote.voter.voterType()==Regular && vote.voter.timesOfVotes() >= max_times_voter)
         return *this;
-
+    if(vote.voter.voterType()==Judge && vote.voter.timesOfVotes())
+        return *this;
     ++(vote.voter);
     if(vote.voter.voterType() == Regular){
         string vote_to = vote.states[0];
-        getByState(vote_to)->regular_votes++;
+        if(getByState(vote_to) && voter_state != vote_to)
+            getByState(vote_to)->regular_votes++;
     }
     if(vote.voter.voterType() == Judge){
         for(int i=0; i < 10; i++){
             string vote_to = vote.states[i];
             if(vote_to.empty())
                 break;
+            if(!getByState(vote_to) || voter_state == vote_to)
+                continue;
             if(i ==0)
                 getByState(vote_to)->judge_votes += 12;
             else if(i == 1)
                 getByState(vote_to)->judge_votes += 10;
+            else if(i == 2)
+                getByState(vote_to)->judge_votes += 8;
             else
                 getByState(vote_to)->judge_votes += 10-i;
         }

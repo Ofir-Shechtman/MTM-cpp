@@ -3,5 +3,9 @@ project(hw3)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(hw3 test1.cpp
-        eurovision.cpp)
+add_executable(hw3 #test1.cpp
+        eurovision.cpp
+        #part1_tests/MY_TEST.cpp
+        part1_tests/finaltest.cpp
+        )
+

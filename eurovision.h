@@ -8,6 +8,7 @@
 using std::string;
 using std::ostream;
 using std::endl;
+
 //---------------------------------------------------
 
 enum VoterType { All, Regular, Judge };
