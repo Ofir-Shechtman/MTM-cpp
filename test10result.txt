@@ -1,0 +1,107 @@
+[georgia/song_georgia/194/singer_georgia]
+[belarus/song_belarus/201/singer_belarus]
+[croatia/song_croatia/210/singer_croatia]
+[belarus/song_belarus/219/singer_belarus]
+[bulgaria/song_bulgaria/106/singer_bulgaria]
+[latvia/song_latvia/135/singer_latvia]
+[ukraine/song_ukraine/107/singer_ukraine]
+[greece/song_greece/129/singer_greece]
+[slovenia/song_slovenia/187/singer_slovenia]
+[croatia/song_croatia/191/singer_croatia]
+[russia/song_russia/217/singer_russia]
+[estonia/song_estonia/190/singer_estonia]
+[israel/song_israel/114/singer_israel]
+[bosnia/song_bosnia/225/singer_bosnia]
+[luxembourg/song_luxembourg/203/singer_luxembourg]
+[malta/song_malta/156/singer_malta]
+[croatia/song_croatia/106/singer_croatia]
+[croatia/song_croatia/186/singer_croatia]
+[ukraine/song_ukraine/119/singer_ukraine]
+[bosnia/song_bosnia/204/singer_bosnia]
+[switzerland/song_switzerland/201/singer_switzerland]
+[turkey/song_turkey/212/singer_turkey]
+[switzerland/song_switzerland/173/singer_switzerland]
+[serbia/song_serbia/156/singer_serbia]
+[austria/song_austria/115/singer_austria]
+[estonia/song_estonia/223/singer_estonia]
+[lithiania/song_lithiania/158/singer_lithiania]
+[switzerland/song_switzerland/148/singer_switzerland]
+[andora/song_andora/214/singer_andora]
+[serbia/song_serbia/206/singer_serbia]
+[israel/song_israel/146/singer_israel]
+[malta/song_malta/208/singer_malta]
+[armenia/song_armenia/206/singer_armenia]
+[austria/song_austria/140/singer_austria]
+[hungary/song_hungary/193/singer_hungary]
+[ukraine/song_ukraine/184/singer_ukraine]
+{
+Registration
+}
+
+{
+Registration
+[austria/new_song/140/singer_austria]
+[croatia/song_croatia/106/singer_croatia]
+[israel/new_song/148/newsinger]
+[malta/song_malta/156/singer_malta]
+[switzerland/new_song/148/newsinger]
+[ukraine/new_song/119/newsinger]
+}
+
+{
+Registration
+[croatia/song_croatia/106/singer_croatia]
+[greece/new_song/129/newsinger]
+[latvia/song_latvia/135/singer_latvia]
+[malta/song_malta/156/singer_malta]
+[switzerland/new_song/148/newsinger]
+}
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+0
+0
+[lithiania/song_lithiania/120/singer_lithiania]
+[austria/song_austria/120/singer_austria]
+[switzerland/new_song/120/singer_switzerland]
+[switzerland/new_song/148/newsinger]
+[israel/new_song/120/newsinger]
+[bosnia/new_song/120/singer_bosnia]
+[malta/new_song/120/newsinger]
+[turkey/song_turkey/120/singer_turkey]
+[andora/song_andora/120/singer_andora]
+[luxembourg/song_luxembourg/120/singer_luxembourg]
+[israel/new_song/120/newsinger]
+[belarus/song_belarus/120/singer_belarus]
+[croatia/song_croatia/120/singer_croatia]
+[latvia/song_latvia/135/singer_latvia]
+{
+Voting
+austria : Regular(0) Judge(0)
+greece : Regular(0) Judge(0)
+latvia : Regular(0) Judge(0)
+malta : Regular(0) Judge(0)
+switzerland : Regular(0) Judge(0)
+ukraine : Regular(0) Judge(0)
+}
+
+{
+Voting
+austria : Regular(0) Judge(25)
+greece : Regular(0) Judge(18)
+latvia : Regular(1) Judge(0)
+malta : Regular(0) Judge(0)
+switzerland : Regular(2) Judge(6)
+ukraine : Regular(0) Judge(0)
+}
+

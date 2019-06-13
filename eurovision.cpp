@@ -207,7 +207,7 @@ ostream &operator<<(ostream &os, const MainControl &mc){
     */
     string phases[3]= {"Registration", "Contest", "Voting"};
     os << "{" << endl << phases[mc.phase] << endl;
-    string * states_names= new string[mc.max_number_of_participants];
+    string* states_names= new string[mc.max_number_of_participants];
     int counter=0;
     for(int i=0; i<mc.max_number_of_participants; i++){
         if(mc.participant_array[i].participant != NULL) {
@@ -234,9 +234,7 @@ ostream &operator<<(ostream &os, const MainControl &mc){
 bool MainControl::legalParticipant(Participant& p){
     if(p.state().empty() || p.song().empty() || p.singer().empty())
         return false;
-    if(p.timeLength() > max_time_length || p.timeLength()<=0)
-        return false;
-    return true;
+    return !(p.timeLength() > max_time_length || p.timeLength() <= 0);
 }
 
 MainControl::ParticipantWithVotes* MainControl::getByState(string state) const{
@@ -252,24 +250,17 @@ MainControl& MainControl::operator+=(Vote vote){
     string voter_state = vote.voter.state();
     if (!getByState(voter_state))
         return *this;
-    for(int i=0; i<10; i++){
-        string cur_state = vote.states[i];
-        if(cur_state.empty())
-            break;
-        //if(voter_state == cur_state)
-        //    return *this;
-    }
-    if(vote.voter.voterType()==Regular && vote.voter.timesOfVotes() >= max_times_voter)
-        return *this;
-    if(vote.voter.voterType()==Judge && vote.voter.timesOfVotes())
-        return *this;
     ++(vote.voter);
     if(vote.voter.voterType() == Regular){
+        if(vote.voter.timesOfVotes() >= max_times_voter)
+            return *this;
         string vote_to = vote.states[0];
         if(getByState(vote_to) && voter_state != vote_to)
             getByState(vote_to)->regular_votes++;
     }
-    if(vote.voter.voterType() == Judge){
+    else if(vote.voter.voterType() == Judge){
+        if(vote.voter.timesOfVotes())
+            return *this;
         for(int i=0; i < 10; i++){
             string vote_to = vote.states[i];
             if(vote_to.empty())
