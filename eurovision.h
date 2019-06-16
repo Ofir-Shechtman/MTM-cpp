@@ -13,6 +13,7 @@ using std::endl;
 
 enum VoterType { All, Regular, Judge };
 enum Phase { Registration, Contest, Voting };
+enum Direction { Left, Right };
 
 //---------------------------------------------------
 
@@ -96,8 +97,14 @@ class MainControl
         ~ParticipantWithVotes() = default;
         ParticipantWithVotes &operator=(const ParticipantWithVotes &pwv) = default;
         ParticipantWithVotes(const ParticipantWithVotes &pwv) = delete;
+        static void swap(ParticipantWithVotes& a, ParticipantWithVotes& b);
+
+
     };
+    int get_state_index(string state) const;
+    void shift(int i, Direction d);
     ParticipantWithVotes* participant_array;
+    int participant_counter;
     ParticipantWithVotes* getByState(string state) const;
 public :
     explicit MainControl(int max_time_length = 180,
@@ -113,7 +120,19 @@ public :
     MainControl &operator-=(Participant& p);
     MainControl &operator+=(Vote vote);
     friend ostream &operator<<(ostream &os, const MainControl &mc);
-
+    class Iterator{
+        int i;
+    public:
+        Iterator()= default;
+        ~Iterator()= default;
+        Iterator &operator=(const Iterator &iterator) = default;
+        Iterator& operator++();
+        const string operator*() const;
+        bool operator==(const Iterator &iterator) const;
+        bool operator<(const Iterator &iterator) const;
+    };
+    Iterator begin() const;
+    Iterator end() const;
 };
 
 ostream &operator<<(ostream &os, const Participant &p);

@@ -108,7 +108,13 @@ MainControl::ParticipantWithVotes::ParticipantWithVotes(Participant* participant
                               const int regular_votes, const int judge_votes):
 regular_votes(regular_votes),
 judge_votes(judge_votes),
-participant(participant){};
+participant(participant){}
+
+void
+MainControl::ParticipantWithVotes::swap(MainControl::ParticipantWithVotes &a,
+                                        MainControl::ParticipantWithVotes &b) {
+
+};
 
 MainControl::MainControl(const int max_time_length,
             const int max_number_of_participants,
@@ -267,4 +273,38 @@ MainControl& MainControl::operator+=(Vote vote){
         }
     }
     return *this;
+}
+
+MainControl::Iterator MainControl::begin() const {
+    return MainControl::Iterator();
+}
+
+MainControl::Iterator MainControl::end() const {
+    return MainControl::Iterator();
+}
+
+int MainControl::get_state_index(const string state) const {
+    return 0;
+}
+
+void MainControl::shift(int i, Direction d) {
+
+}
+
+MainControl::Iterator &MainControl::Iterator::operator++() {
+    return <#initializer#>;
+}
+
+const string MainControl::Iterator::operator*() const {
+    return std::__cxx11::string();
+}
+
+bool MainControl::Iterator::operator==(
+        const MainControl::Iterator &iterator) const {
+    return false;
+}
+
+bool
+MainControl::Iterator::operator<(const MainControl::Iterator &iterator) const {
+    return false;
 }
