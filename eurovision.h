@@ -92,16 +92,13 @@ class MainControl
         Participant* participant;
         int regular_votes;
         int judge_votes;
-        explicit ParticipantWithVotes(Participant* participant= nullptr,
-                                      int regular_votes=0, int judge_votes=0);
+        explicit ParticipantWithVotes(Participant* participant= nullptr);
         ~ParticipantWithVotes() = default;
         ParticipantWithVotes &operator=(const ParticipantWithVotes &pwv) = default;
-        ParticipantWithVotes(const ParticipantWithVotes &pwv) = delete;
+        ParticipantWithVotes(const ParticipantWithVotes &pwv) = default;
         static void swap(ParticipantWithVotes& a, ParticipantWithVotes& b);
-
-
     };
-    int get_state_index(string state) const;
+    int get_state_index(const string& state) const;
     void shift(int i, Direction d);
     ParticipantWithVotes* participant_array;
     int participant_counter;

@@ -104,16 +104,17 @@ Vote::~Vote() {
 }
 
 
-MainControl::ParticipantWithVotes::ParticipantWithVotes(Participant* participant,
-                              const int regular_votes, const int judge_votes):
-regular_votes(regular_votes),
-judge_votes(judge_votes),
+MainControl::ParticipantWithVotes::ParticipantWithVotes(Participant* participant):
+regular_votes(0),
+judge_votes(0),
 participant(participant){}
 
-void
-MainControl::ParticipantWithVotes::swap(MainControl::ParticipantWithVotes &a,
-                                        MainControl::ParticipantWithVotes &b) {
-
+void MainControl::ParticipantWithVotes::swap(MainControl::ParticipantWithVotes &a,
+                                             MainControl::ParticipantWithVotes &b)
+                                             {
+    MainControl::ParticipantWithVotes temp(a);
+    a=b;
+    b=temp;
 };
 
 MainControl::MainControl(const int max_time_length,
@@ -123,7 +124,8 @@ MainControl::MainControl(const int max_time_length,
             max_number_of_participants(max_number_of_participants),
             max_times_voter(max_times_voter),
             phase(Registration),
-            participant_array(new ParticipantWithVotes[max_number_of_participants])
+            participant_array(new ParticipantWithVotes[max_number_of_participants]),
+            participant_counter(0)
             {};
 
 MainControl::~MainControl(){
@@ -145,29 +147,26 @@ MainControl& MainControl::operator+=(Participant& p){
         return *this;
     if(participate(p.state()) || !legalParticipant(p))
         return *this;
-    for(int i=0; i<max_number_of_participants; i++){
-        if(participant_array[i].participant== nullptr){
-            p.updateRegistered(true);
-            participant_array[i]= ParticipantWithVotes(&p);
-            break;
-        }
-    }
+    if(max_number_of_participants==participant_counter)
+        return *this;
+    int p_index=get_state_index(p.state());
+    shift(p_index, Right);
+    participant_array[p_index]=ParticipantWithVotes(&p);
+    p.updateRegistered(true);
+    participant_counter++;
     return *this;
 }
 
 MainControl& MainControl::operator-=(Participant &p){
     if(phase != Registration)
         return *this;
-    for(int i=0; i<max_number_of_participants; i++){
-        Participant* cur_p= participant_array[i].participant;
-        if(cur_p==&p){
-            participant_array[i].participant = nullptr;
-            participant_array[i].judge_votes =0;
-            participant_array[i].regular_votes =0;
-            p.updateRegistered(false);
-            break;
-        }
-    }
+    if(!participate(p.state()))
+        return *this;
+    int p_index=get_state_index(p.state());
+    participant_array[p_index]=ParticipantWithVotes(nullptr);
+    shift(p_index, Left);
+    p.updateRegistered(false);
+    participant_counter--;
     return *this;
 }
 
@@ -202,26 +201,17 @@ ostream &operator<<(ostream &os, const MainControl &mc){
     */
     string phases[3]= {"Registration", "Contest", "Voting"};
     os << "{" << endl << phases[mc.phase] << endl;
-    auto* states_names= new string[mc.max_number_of_participants];
-    int counter=0;
-    for(int i=0; i<mc.max_number_of_participants; i++){
-        if(mc.participant_array[i].participant != nullptr) {
-            states_names[counter] = mc.participant_array[i].participant->state();
-            counter++;
-        }
-    }
-    stringSort(states_names,counter);
-    for(int i=0; i<counter; i++) {
+    for(int i=0; i<mc.participant_counter; i++) {
+        MainControl::ParticipantWithVotes cur_pwv=mc.participant_array[i];
         if(mc.phase==Registration)
-            os << *(mc.getByState(states_names[i])->participant) << endl;
+            os << *(cur_pwv.participant) << endl;
         else if(mc.phase==Voting) {
-            int regular = mc.getByState(states_names[i])->regular_votes;
-            int judge = mc.getByState(states_names[i])->judge_votes;
-            os << states_names[i] << " : Regular(" << regular << ") Judge("
+            int regular = cur_pwv.regular_votes;
+            int judge = cur_pwv.judge_votes;
+            os << cur_pwv.participant->state() << " : Regular(" << regular << ") Judge("
                << judge << ")" << endl;
         }
     }
-    delete[] states_names;
     os << "}" << endl;
     return os;
 }
@@ -229,13 +219,13 @@ ostream &operator<<(ostream &os, const MainControl &mc){
 bool MainControl::legalParticipant(Participant& p){
     if(p.state().empty() || p.song().empty() || p.singer().empty())
         return false;
-    return (p.timeLength() < max_time_length && p.timeLength() > 0);
+    return (p.timeLength() <= max_time_length && p.timeLength() > 0);
 }
 
 MainControl::ParticipantWithVotes* MainControl::getByState(string state) const{
-    for(int i=0; i < max_number_of_participants; i++){
+    for(int i=0; i < participant_counter; i++){
         Participant* cur_p = participant_array[i].participant;
-        if (cur_p != nullptr && cur_p->state() == state)
+        if (cur_p->state() == state)
             return &participant_array[i];
     }
     return nullptr;
@@ -245,13 +235,14 @@ MainControl& MainControl::operator+=(Vote vote){
     string voter_state = vote.voter.state();
     if (!getByState(voter_state))
         return *this;
-    ++(vote.voter);
-    if(vote.voter.voterType() == Regular){
-        if(vote.voter.timesOfVotes() >= max_times_voter)
+    if(vote.voter.voterType() == Regular) {
+        if (vote.voter.timesOfVotes() >= max_times_voter)
             return *this;
         string vote_to = vote.states[0];
-        if(getByState(vote_to) && voter_state != vote_to)
+        if (getByState(vote_to) && voter_state != vote_to) {
             getByState(vote_to)->regular_votes++;
+            ++(vote.voter);
+        }
     }
     else if(vote.voter.voterType() == Judge){
         if(vote.voter.timesOfVotes())
@@ -271,6 +262,7 @@ MainControl& MainControl::operator+=(Vote vote){
             else
                 getByState(vote_to)->judge_votes += 10-i;
         }
+        ++(vote.voter);
     }
     return *this;
 }
@@ -283,14 +275,31 @@ MainControl::Iterator MainControl::end() const {
     return MainControl::Iterator();
 }
 
-int MainControl::get_state_index(const string state) const {
-    return 0;
+int MainControl::get_state_index(const string& state) const {
+    int i=0;
+    for(;i<participant_counter;i++) {
+        string cur_string = participant_array[i].participant->state();
+        if (cur_string.compare(state) >= 0)
+            return i;
+    }
+    return i;
 }
 
 void MainControl::shift(int i, Direction d) {
+    if(d==Right){
+        for(int idx=max_number_of_participants-1; idx>i; idx--){
+            ParticipantWithVotes::swap(participant_array[idx], participant_array[idx-1]);
+        }
+    }
+    if(d==Left){
+        for(int idx=i; idx<max_number_of_participants-1; idx++){
+            ParticipantWithVotes::swap(participant_array[idx], participant_array[idx+1]);
+        }
+    }
+
 
 }
-
+/*
 MainControl::Iterator &MainControl::Iterator::operator++() {
     return <#initializer#>;
 }
@@ -308,3 +317,4 @@ bool
 MainControl::Iterator::operator<(const MainControl::Iterator &iterator) const {
     return false;
 }
+*/
