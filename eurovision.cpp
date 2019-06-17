@@ -105,9 +105,10 @@ Vote::~Vote() {
 
 
 MainControl::ParticipantWithVotes::ParticipantWithVotes(Participant* participant):
+participant(participant),
 regular_votes(0),
-judge_votes(0),
-participant(participant){}
+judge_votes(0)
+{}
 
 void MainControl::ParticipantWithVotes::swap(MainControl::ParticipantWithVotes &a,
                                              MainControl::ParticipantWithVotes &b)
@@ -115,7 +116,7 @@ void MainControl::ParticipantWithVotes::swap(MainControl::ParticipantWithVotes &
     MainControl::ParticipantWithVotes temp(a);
     a=b;
     b=temp;
-};
+}
 
 MainControl::MainControl(const int max_time_length,
             const int max_number_of_participants,
@@ -126,7 +127,7 @@ MainControl::MainControl(const int max_time_length,
             phase(Registration),
             participant_array(new ParticipantWithVotes[max_number_of_participants]),
             participant_counter(0)
-            {};
+{}
 
 MainControl::~MainControl(){
     delete[] participant_array;
@@ -160,7 +161,7 @@ MainControl& MainControl::operator+=(Participant& p){
 MainControl& MainControl::operator-=(Participant &p){
     if(phase != Registration)
         return *this;
-    if(!participate(p.state()))
+    if(!p.isRegistered())
         return *this;
     int p_index=get_state_index(p.state());
     participant_array[p_index]=ParticipantWithVotes(nullptr);

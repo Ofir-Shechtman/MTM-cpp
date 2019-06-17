@@ -17,7 +17,7 @@
 #include "test9.cpp"
 #include <stdio.h>
 int main(){
-    TEST1();
+    //TEST1();
     TEST2();
     TEST3();
     TEST4();
