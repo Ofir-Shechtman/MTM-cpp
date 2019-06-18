@@ -320,22 +320,22 @@ public:
 };
 
 template <class T, class Container>
-T get(int i, Container container) {
+T get(int i, Container& container) {
 
     if(i>container.size() || i<=0)
-        throw std::length_error("get invalid i");
-        //return *container.end();
-    T min = *container.begin();
+        //throw std::length_error("get invalid i");
+        return container.end();
+    auto min = container.begin();
     for (auto j = container.begin(); j < container.end(); j++) {
-        if (*j < min)
-            min = *j;
+        if (*j < *min)
+            min = j;
     }
-    T max = min, global_max = min;
+    auto max = min, global_max = min;
     for(int times = 0; times < i; times++) {
         max = min;
         for (auto j = container.begin(); j < container.end(); j++) {
-            if (max < *j  && (times==0 || *j < global_max))
-                max = *j;
+            if (*max < *j  && (times==0 || *j < *global_max))
+                max = j;
         }
         global_max = max;
     }
@@ -357,13 +357,8 @@ string MainControl::operator()(int location, VoterType type) {
             result = pwd->regular_votes + pwd->judge_votes;
         votes.push_back(Pair(p.state(), result));
     }
-    try {
-        Pair winner = get<Pair, vector<Pair>>(location, votes);
-        return winner.first;
-    }
-    catch(std::length_error&){
+    auto winner = get<vector<Pair>::iterator,vector<Pair>>(location, votes);
+        if(winner!=votes.end())
+            return (*winner).first;
         return "";
-        }
 }
-
-

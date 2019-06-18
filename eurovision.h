@@ -145,7 +145,7 @@ ostream &operator<<(ostream &os, const MainControl &mc);
 // -----------------------------------------------------------
 
 template <class T, class Container>
-T get(int i, Container container);
+T get(int i, Container& container);
 // -----------------------------------------------------------
 
 #endif
