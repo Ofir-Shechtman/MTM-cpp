@@ -1,5 +1,6 @@
 #include <iostream>
 #include "eurovision.h"
+#include  <stdexcept>
 
 Participant::Participant(const string state, const string song,
             const int timeLength, const string singer):
@@ -313,18 +314,17 @@ public:
     Pair(string state, int votes) : pair(state, votes) {}
     bool operator<(Pair &pair) const {
         if(this->second==pair.second)
-            return this->first.compare(pair.first);
+            return this->first.compare(pair.first) < 0;
         return this->second<pair.second;
-    }
-    bool operator>(Pair &pair) const {
-        return (!(*this < pair));
     }
 };
 
 template <class T, class Container>
 T get(int i, Container container) {
+
     if(i>container.size() || i<=0)
-        return *container.end();
+        throw std::length_error("get invalid i");
+        //return *container.end();
     T min = *container.begin();
     for (auto j = container.begin(); j < container.end(); j++) {
         if (*j < min)
@@ -334,7 +334,7 @@ T get(int i, Container container) {
     for(int times = 0; times < i; times++) {
         max = min;
         for (auto j = container.begin(); j < container.end(); j++) {
-            if (*j > max && (times==0 || *j < global_max))
+            if (max < *j  && (times==0 || *j < global_max))
                 max = *j;
         }
         global_max = max;
@@ -348,7 +348,7 @@ string MainControl::operator()(int location, VoterType type) {
     for(Iterator i = begin();i<end();++i){
         Participant& p= *i;
         MainControl::ParticipantWithVotes* pwd = getByState(p.state());
-        int result;
+        int result=0;
         if(type == Regular)
             result= pwd->regular_votes;
         else if(type == Judge)
@@ -357,8 +357,13 @@ string MainControl::operator()(int location, VoterType type) {
             result = pwd->regular_votes + pwd->judge_votes;
         votes.push_back(Pair(p.state(), result));
     }
-    Pair winner = get<Pair, vector<Pair>>(location,votes);
-    return winner.first;
+    try {
+        Pair winner = get<Pair, vector<Pair>>(location, votes);
+        return winner.first;
+    }
+    catch(std::length_error&){
+        return "";
+        }
 }
 
 
