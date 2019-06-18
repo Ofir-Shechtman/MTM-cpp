@@ -119,6 +119,7 @@ public :
     friend ostream &operator<<(ostream &os, const MainControl &mc);
     class Iterator{
         int i;
+
     public:
         Iterator()= default;
         ~Iterator()= default;
