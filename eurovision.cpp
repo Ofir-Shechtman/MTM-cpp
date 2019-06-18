@@ -248,12 +248,14 @@ MainControl& MainControl::operator+=(Vote vote){
     else if(vote.voter.voterType() == Judge){
         if(vote.voter.timesOfVotes())
             return *this;
+        int counter=0;
         for(int i=0; i < 10; i++){
             string vote_to = vote.states[i];
             if(vote_to.empty())
                 break;
             if(!getByState(vote_to) || voter_state == vote_to)
                 continue;
+            counter++;
             if(i ==0)
                 getByState(vote_to)->judge_votes += 12;
             else if(i == 1)
@@ -263,7 +265,8 @@ MainControl& MainControl::operator+=(Vote vote){
             else
                 getByState(vote_to)->judge_votes += 10-i;
         }
-        ++(vote.voter);
+        if(counter)
+            ++(vote.voter);
     }
     return *this;
 }
@@ -300,13 +303,17 @@ void MainControl::shift(int i, Direction d) {
 
 
 }
-/*
+
+string MainControl::operator()(int location, VoterType type) {
+    return "";
+}
+
 MainControl::Iterator &MainControl::Iterator::operator++() {
-    return <#initializer#>;
+    return *this;
 }
 
 const string MainControl::Iterator::operator*() const {
-    return std::__cxx11::string();
+    return "";
 }
 
 bool MainControl::Iterator::operator==(
@@ -318,4 +325,3 @@ bool
 MainControl::Iterator::operator<(const MainControl::Iterator &iterator) const {
     return false;
 }
-*/

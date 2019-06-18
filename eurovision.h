@@ -130,6 +130,7 @@ public :
     };
     Iterator begin() const;
     Iterator end() const;
+    string operator()(int location, VoterType type);
 };
 
 ostream &operator<<(ostream &os, const Participant &p);
