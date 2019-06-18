@@ -3,12 +3,17 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+
 // it's allowed to define here any using statements, according to needs.
 // do NOT define here : using namespace std;
 using std::string;
+using std::vector;
 using std::ostream;
 using std::endl;
-
+//deleteeeeeee
+#include <array>
+//
 //---------------------------------------------------
 
 enum VoterType { All, Regular, Judge };
@@ -119,14 +124,13 @@ public :
     friend ostream &operator<<(ostream &os, const MainControl &mc);
     class Iterator{
         int i;
-
-
+        ParticipantWithVotes* participant_arr;
     public:
-        Iterator()= default;
+        Iterator(int init = 0, ParticipantWithVotes* pwd = nullptr);
         ~Iterator()= default;
         Iterator &operator=(const Iterator &iterator) = default;
         Iterator& operator++();
-        const string operator*() const;
+        Participant& operator*() const;
         bool operator==(const Iterator &iterator) const;
         bool operator<(const Iterator &iterator) const;
     };
@@ -140,4 +144,9 @@ ostream &operator<<(ostream &os, const Voter &voter);
 ostream &operator<<(ostream &os, const MainControl &mc);
 // -----------------------------------------------------------
 
+template <class T, class Container>
+T get(int i, Container container);
+// -----------------------------------------------------------
+
 #endif
+

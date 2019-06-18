@@ -171,25 +171,6 @@ MainControl& MainControl::operator-=(Participant &p){
     return *this;
 }
 
-int findMaxIdx(string* strings, int n){
-    string max; //max=""
-    int max_idx = -1;
-    for(int i=0; i<n; i++){
-        if(strings[i].compare(max)>=0) {
-            max = strings[i];
-            max_idx = i;
-        }
-    }
-    return max_idx;
-}
-
-void stringSort(string* strings, int n){
-    for(int len=n; len>0; len--){
-        int max_idx = findMaxIdx(strings,len);
-        strings[max_idx].swap(strings[len-1]);
-    }
-}
-
 ostream &operator<<(ostream &os, const MainControl &mc){
     /*
     {
@@ -271,14 +252,6 @@ MainControl& MainControl::operator+=(Vote vote){
     return *this;
 }
 
-MainControl::Iterator MainControl::begin() const {
-    return MainControl::Iterator();
-}
-
-MainControl::Iterator MainControl::end() const {
-    return MainControl::Iterator();
-}
-
 int MainControl::get_state_index(const string& state) const {
     int i=0;
     for(;i<participant_counter;i++) {
@@ -300,28 +273,92 @@ void MainControl::shift(int i, Direction d) {
             ParticipantWithVotes::swap(participant_array[idx], participant_array[idx+1]);
         }
     }
-
-
 }
 
-string MainControl::operator()(int location, VoterType type) {
-    return "";
-}
+MainControl::Iterator::Iterator(int init, MainControl::ParticipantWithVotes *pwd):
+        i(init), participant_arr(pwd)
+{}
 
 MainControl::Iterator &MainControl::Iterator::operator++() {
+    i++;
     return *this;
 }
 
-const string MainControl::Iterator::operator*() const {
-    return "";
+Participant& MainControl::Iterator::operator*() const {
+    return *(participant_arr[i].participant);
 }
 
 bool MainControl::Iterator::operator==(
         const MainControl::Iterator &iterator) const {
-    return false;
+    return (this->i == iterator.i &&
+            this->participant_arr == iterator.participant_arr);
 }
 
-bool
-MainControl::Iterator::operator<(const MainControl::Iterator &iterator) const {
-    return false;
+bool MainControl::Iterator::operator<(
+        const MainControl::Iterator &iterator) const {
+    return (this->i < iterator.i);
 }
+
+MainControl::Iterator MainControl::begin() const {
+    return MainControl::Iterator(0,participant_array);
+}
+
+MainControl::Iterator MainControl::end() const {
+    return MainControl::Iterator(participant_counter,participant_array);
+}
+
+
+class Pair : public std::pair<string, int>{
+public:
+    Pair(string state, int votes) : pair(state, votes) {}
+    bool operator<(Pair &pair) const {
+        if(this->second==pair.second)
+            return this->first.compare(pair.first);
+        return this->second<pair.second;
+    }
+    bool operator>(Pair &pair) const {
+        return (!(*this < pair));
+    }
+};
+
+template <class T, class Container>
+T get(int i, Container container) {
+    if(i>container.size() || i<=0)
+        return *container.end();
+    T min = *container.begin();
+    for (auto j = container.begin(); j < container.end(); j++) {
+        if (*j < min)
+            min = *j;
+    }
+    T max = min, global_max = min;
+    for(int times = 0; times < i; times++) {
+        max = min;
+        for (auto j = container.begin(); j < container.end(); j++) {
+            if (*j > max && (times==0 || *j < global_max))
+                max = *j;
+        }
+        global_max = max;
+    }
+    return max;
+}
+
+
+string MainControl::operator()(int location, VoterType type) {
+    vector<Pair> votes;
+    for(Iterator i = begin();i<end();++i){
+        Participant& p= *i;
+        MainControl::ParticipantWithVotes* pwd = getByState(p.state());
+        int result;
+        if(type == Regular)
+            result= pwd->regular_votes;
+        else if(type == Judge)
+            result= pwd->judge_votes;
+        else if (type == All)
+            result = pwd->regular_votes + pwd->judge_votes;
+        votes.push_back(Pair(p.state(), result));
+    }
+    Pair winner = get<Pair, vector<Pair>>(location,votes);
+    return winner.first;
+}
+
+
