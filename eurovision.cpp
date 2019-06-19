@@ -311,7 +311,7 @@ MainControl::Iterator MainControl::end() const {
 
 class Pair : public std::pair<string, int>{
 public:
-    Pair(string state, int votes) : pair(state, votes) {}
+    Pair(const string& state, int votes) : pair(state, votes) {}
     bool operator<(Pair &pair) const {
         if(this->second==pair.second)
             return this->first.compare(pair.first) < 0;
@@ -319,21 +319,27 @@ public:
     }
 };
 
-template <class T, class Container>
-T get(int i, Container& container) {
-
-    if(i>container.size() || i<=0)
-        //throw std::length_error("get invalid i");
-        return container.end();
-    auto min = container.begin();
-    for (auto j = container.begin(); j < container.end(); j++) {
+template <class Iterator>
+Iterator get(int i, Iterator begin, Iterator end) {
+    if(i <= 0 )
+        return end;
+    Iterator iter=begin;
+    int size=0;
+    while(iter!=end){
+        ++iter;
+        ++size;
+    }
+    if(i>size)
+        return end;
+    Iterator min = begin;
+    for (Iterator j = begin; j < end; j++) {
         if (*j < *min)
             min = j;
     }
-    auto max = min, global_max = min;
+    Iterator max = min, global_max = min;
     for(int times = 0; times < i; times++) {
         max = min;
-        for (auto j = container.begin(); j < container.end(); j++) {
+        for (Iterator j = begin; j < end; j++) {
             if (*max < *j  && (times==0 || *j < *global_max))
                 max = j;
         }
@@ -357,8 +363,9 @@ string MainControl::operator()(int location, VoterType type) {
             result = pwd->regular_votes + pwd->judge_votes;
         votes.push_back(Pair(p.state(), result));
     }
-    auto winner = get<vector<Pair>::iterator,vector<Pair>>(location, votes);
-        if(winner!=votes.end())
-            return (*winner).first;
+    auto desired_pair = get<vector<Pair>::iterator>(location,
+                                              votes.begin(),votes.end());
+        if(desired_pair!=votes.end())
+            return desired_pair->first;
         return "";
 }

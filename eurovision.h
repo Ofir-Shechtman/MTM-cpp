@@ -144,8 +144,8 @@ ostream &operator<<(ostream &os, const Voter &voter);
 ostream &operator<<(ostream &os, const MainControl &mc);
 // -----------------------------------------------------------
 
-template <class T, class Container>
-T get(int i, Container& container);
+template <class Iterator>
+Iterator get(int i, Iterator begin, Iterator end);
 // -----------------------------------------------------------
 
 #endif
