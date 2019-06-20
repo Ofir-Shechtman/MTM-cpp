@@ -4,8 +4,9 @@ project(hw3)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(hw3
-        test_part_c.cpp
+        #test_part_c.cpp
+        part2/clion/finalTest.cpp
         eurovision.cpp
         #part1_tests/finaltest.cpp
-        seat.cpp)
+        seat.cpp fdxfh.h)
 

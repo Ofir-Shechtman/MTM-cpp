@@ -1,3 +1,6 @@
+#ifndef HW3_SEAT_H
+#define HW3_SEAT_H
+
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -42,16 +45,18 @@ public:
 // ---------------------------------------------
 class MainHallSeat : public Seat
 {
-public:
+protected:
     MainHallSeat(int line, int chair, int basePrice);
+public:
     virtual ~MainHallSeat() override = default;
 };
 
 // ---------------------------------------------
 class SpecialSeat : public MainHallSeat
 {
-public:
+protected:
     SpecialSeat(int line, int chair, int basePrice);
+public:
     virtual ~SpecialSeat() override = default;
 };
 
@@ -78,8 +83,8 @@ class RegularSeat : public MainHallSeat
 {
 protected:
     char area;
-public:
     RegularSeat(char area, int line, int chair, int basePrice);
+public:
     virtual ~RegularSeat() override = default;
 };
 
@@ -111,3 +116,4 @@ public:
 };
 
 // ---------------------------------------------
+#endif //HW3_SEAT_H
