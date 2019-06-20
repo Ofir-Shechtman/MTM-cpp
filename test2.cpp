@@ -387,3 +387,25 @@ TEST("1.17.3")
 
   return 0;
 }
+class Base
+{
+    void method() {std::cout << "from Base" << std::endl;}
+public:
+    Base() {method();}
+    virtual ~Base() {method();}
+    void baseMethod() { method();}
+};
+class A: public Base
+{
+    void method() {std::cout << "from A" << std::endl;}
+public:
+    A() {method();}
+    ~A () { method();}
+};
+int main (void)
+{
+    Base* base = new A();
+    base -> baseMethod();
+    delete base;
+    return 0;
+}
