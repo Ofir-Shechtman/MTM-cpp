@@ -68,3 +68,4 @@ GoldenCircleSeat::GoldenCircleSeat(int line, int chair, int basePrice)
 
 DisablePodiumSeat::DisablePodiumSeat(int line, int chair, int basePrice)
         : SpecialSeat(line, chair, 200) {}
+
