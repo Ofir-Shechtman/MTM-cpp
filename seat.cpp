@@ -7,6 +7,8 @@ Seat::Seat(int line, int chair, int basePrice)
 MainHallSeat::MainHallSeat(int line, int chair, int basePrice)
     : Seat(line, chair, basePrice+100) {}
 
+
+
 RegularSeat::RegularSeat(char area, int line, int chair, int basePrice)
     : area(area), MainHallSeat(line, chair, basePrice) {}
 
@@ -14,8 +16,8 @@ string Seat::getLocation(const string class_name, char area) const {
     //Middle-> area: D, line: 30, chair: 15
     string result= class_name + "-> ";
     if(area)
-        result+= "area: " + to_string(area) + ", ";
-    result += "line: " + to_string(line) + " chair: " + to_string(chair);
+        result+= "area: " + string(1, area) + ", ";
+    result += "line: " + to_string(line) + ", chair: " + to_string(chair);
     return result;
 }
 
@@ -41,39 +43,38 @@ int GreenRoomSeat::price() const {
 FrontRegularSeat::FrontRegularSeat(char area, int line, int chair, int basePrice)
     : RegularSeat(area, line, chair, basePrice+500) {}
 
-string FrontRegularSeat::location() {
+string FrontRegularSeat::location() const{
     return getLocation("Front",area);
 }
 
 MiddleRegularSeat::MiddleRegularSeat(char area, int line, int chair, int basePrice)
     : RegularSeat(area, line, chair, basePrice+250) {}
 
-string MiddleRegularSeat::location() {
+string MiddleRegularSeat::location() const{
     return getLocation("Middle",area);
 }
 
 RearRegularSeat::RearRegularSeat(char area, int line, int chair, int basePrice)
     : RegularSeat(area, line, chair, basePrice) {}
 
-string RearRegularSeat::location() {
+string RearRegularSeat::location() const {
     return getLocation("Rear",area);
 }
 
-
 SpecialSeat::SpecialSeat(int line, int chair, int basePrice):
-    MainHallSeat(line, chair, basePrice) {}
+    MainHallSeat(line, chair, basePrice+300) {}
 
 GoldenCircleSeat::GoldenCircleSeat(int line, int chair, int basePrice)
-        : SpecialSeat(line, chair, basePrice+1000) {}
+        : SpecialSeat(line, chair, basePrice+1000) {} //
 
 string GoldenCircleSeat::location() const {
     return getLocation("Golden Circle");
 }
 
 DisablePodiumSeat::DisablePodiumSeat(int line, int chair, int basePrice)
-        : SpecialSeat(line, chair, 200) {}
+        : SpecialSeat(line, chair, -200) {} //200
 
 string DisablePodiumSeat::location() const {
-    return getLocation("Golden Circle");
+    return getLocation("Disable Podium");
 }
 

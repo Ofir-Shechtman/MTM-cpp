@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 using std::string;
+using std::exception;
 using std::runtime_error;
 
 
@@ -43,7 +44,7 @@ class MainHallSeat : public Seat
 {
 public:
     MainHallSeat(int line, int chair, int basePrice);
-    ~MainHallSeat() override = default;
+    virtual ~MainHallSeat() override = default;
 };
 
 // ---------------------------------------------
@@ -51,7 +52,7 @@ class SpecialSeat : public MainHallSeat
 {
 public:
     SpecialSeat(int line, int chair, int basePrice);
-    ~SpecialSeat() override =0;
+    virtual ~SpecialSeat() override = default;
 };
 
 // ---------------------------------------------
@@ -79,7 +80,7 @@ protected:
     char area;
 public:
     RegularSeat(char area, int line, int chair, int basePrice);
-    virtual ~RegularSeat() override = 0;
+    virtual ~RegularSeat() override = default;
 };
 
 // ---------------------------------------------
@@ -88,7 +89,7 @@ class FrontRegularSeat : public RegularSeat
 public:
     FrontRegularSeat(char area, int line, int chair, int basePrice);
     ~FrontRegularSeat() override = default;
-    string location();
+    string location() const override;
 };
 
 // ---------------------------------------------
@@ -97,7 +98,7 @@ class MiddleRegularSeat : public RegularSeat
 public:
     MiddleRegularSeat(char area, int line, int chair, int basePrice);
     ~MiddleRegularSeat() override = default;
-    string location();
+    string location() const override;
 };
 
 // ---------------------------------------------
@@ -106,7 +107,7 @@ class RearRegularSeat : public RegularSeat
 public:
     RearRegularSeat(char area, int line, int chair, int basePrice);
     ~RearRegularSeat() override = default;
-    string location();
+    string location() const override;
 };
 
 // ---------------------------------------------
