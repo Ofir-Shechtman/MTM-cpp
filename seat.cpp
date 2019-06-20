@@ -41,15 +41,27 @@ int GreenRoomSeat::price() const {
 FrontRegularSeat::FrontRegularSeat(char area, int line, int chair, int basePrice)
     : RegularSeat(area, line, chair, basePrice+500) {}
 
+string FrontRegularSeat::location() {
+    return getLocation("Front",area);
+}
+
 MiddleRegularSeat::MiddleRegularSeat(char area, int line, int chair, int basePrice)
     : RegularSeat(area, line, chair, basePrice+250) {}
+
+string MiddleRegularSeat::location() {
+    return getLocation("Middle",area);
+}
 
 RearRegularSeat::RearRegularSeat(char area, int line, int chair, int basePrice)
     : RegularSeat(area, line, chair, basePrice) {}
 
+string RearRegularSeat::location() {
+    return getLocation("Rear",area);
+}
+
 
 SpecialSeat::SpecialSeat(int line, int chair, int basePrice):
-    MainHallSeat(line, chair, basePrise) {}
+    MainHallSeat(line, chair, basePrice) {}
 
 GoldenCircleSeat::GoldenCircleSeat(int line, int chair, int basePrice)
         : SpecialSeat(line, chair, basePrice+1000) {}
