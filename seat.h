@@ -1,12 +1,15 @@
 #include <iostream>
 #include <string>
+#include <stdexcept>
 using std::string;
-using std::exception;
+using std::runtime_error;
 
 
 // ---------------------------------------------
-class NoPrice
+class NoPrice : public runtime_error
 {
+public:
+    NoPrice();
 };
 
 // ---------------------------------------------
@@ -15,23 +18,28 @@ class Seat
     int line;
     int chair;
     int base_price;
+protected:
+    string getLocation(const string class_name, char area = 0) const;
 public:
     //TODO: const?
     Seat(int line, int chair, int basePrice);
     virtual ~Seat()= default;
-    Seat(const Seat& s) = delete;
-    Seat &operator=(const Seat& s) = delete;
-    virtual string location() = 0;
-    virtual int price() = 0;
+    virtual string location() const =0;
+    virtual int price() const;
 };
 
 // ---------------------------------------------
-class GreenRoomSeat
+class GreenRoomSeat : public Seat
 {
+public:
+    GreenRoomSeat(int line, int chair);
+    ~GreenRoomSeat() override = default;
+    string location() const override;
+    int price() const override;
 };
 
 // ---------------------------------------------
-class MainHallSeat: public Seat
+class MainHallSeat : public Seat
 {
 public:
     MainHallSeat(int line, int chair, int basePrice);
@@ -39,18 +47,27 @@ public:
 };
 
 // ---------------------------------------------
-class SpecialSeat
+class SpecialSeat : public MainHallSeat
 {
+public:
+    SpecialSeat(int line, int chair, int basePrice);
+    virtual ~SpecialSeat() =0;
 };
 
 // ---------------------------------------------
-class GoldenCircleSeat
+class GoldenCircleSeat : public SpecialSeat
 {
+public:
+    GoldenCircleSeat(int line, int chair, int basePrice);
+    virtual ~GoldenCircleSeat() = default;
 };
 
 // ---------------------------------------------
-class DisablePodiumSeat
+class DisablePodiumSeat : public SpecialSeat
 {
+public:
+    DisablePodiumSeat(int line, int chair, int basePrice=0);
+    virtual ~DisablePodiumSeat() = default;
 };
 
 // ---------------------------------------------
