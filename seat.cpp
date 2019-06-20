@@ -76,3 +76,4 @@ DisablePodiumSeat::DisablePodiumSeat(int line, int chair, int basePrice)
 string DisablePodiumSeat::location() const {
     return getLocation("Golden Circle");
 }
+
