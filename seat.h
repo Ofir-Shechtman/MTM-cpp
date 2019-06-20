@@ -51,7 +51,7 @@ class SpecialSeat : public MainHallSeat
 {
 public:
     SpecialSeat(int line, int chair, int basePrice);
-    virtual ~SpecialSeat() override =0;
+    ~SpecialSeat() override =0;
 };
 
 // ---------------------------------------------
@@ -59,7 +59,8 @@ class GoldenCircleSeat : public SpecialSeat
 {
 public:
     GoldenCircleSeat(int line, int chair, int basePrice);
-    virtual ~GoldenCircleSeat() override = default;
+    ~GoldenCircleSeat() override = default;
+    string location() const override;
 };
 
 // ---------------------------------------------
@@ -67,7 +68,8 @@ class DisablePodiumSeat : public SpecialSeat
 {
 public:
     DisablePodiumSeat(int line, int chair, int basePrice=0);
-    virtual ~DisablePodiumSeat() override = default;
+    ~DisablePodiumSeat() override = default;
+    string location() const override;
 };
 
 // ---------------------------------------------

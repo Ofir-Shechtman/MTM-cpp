@@ -15,7 +15,7 @@ string Seat::getLocation(const string class_name, char area) const {
     string result= class_name + "-> ";
     if(area)
         result+= "area: " + to_string(area) + ", ";
-    result += "line: " + to_string(line) + " chair: " + to_string(chair)
+    result += "line: " + to_string(line) + " chair: " + to_string(chair);
     return result;
 }
 
@@ -66,5 +66,13 @@ SpecialSeat::SpecialSeat(int line, int chair, int basePrice):
 GoldenCircleSeat::GoldenCircleSeat(int line, int chair, int basePrice)
         : SpecialSeat(line, chair, basePrice+1000) {}
 
+string GoldenCircleSeat::location() const {
+    return getLocation("Golden Circle");
+}
+
 DisablePodiumSeat::DisablePodiumSeat(int line, int chair, int basePrice)
         : SpecialSeat(line, chair, 200) {}
+
+string DisablePodiumSeat::location() const {
+    return getLocation("Golden Circle");
+}
