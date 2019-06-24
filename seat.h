@@ -106,7 +106,7 @@ public:
     string location() const override;
 };
 
-// ---------------------------------------------
+// ----------------------------------ֺֺ-----------
 class RearRegularSeat : public RegularSeat
 {
 public:
