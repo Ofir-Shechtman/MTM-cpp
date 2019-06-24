@@ -19,7 +19,9 @@ enum Phase { Registration, Contest, Voting };
 enum Direction { Left, Right };
 
 //---------------------------------------------------
-
+/**
+ * contains Participant attributes and methods as described in the PDF
+ */
 class Participant
 {
     const string state_name;
@@ -70,7 +72,9 @@ public:
 
 //---------------------------------------------------
 
-
+/**
+ * contains Voter attributes and methods as described in the PDF
+ */
 class Voter
 {
     const string state_name;
@@ -101,7 +105,10 @@ public :
 
 
 // -----------------------------------------------------------
-
+/**
+ * contain reference to Voter, and array of state the voter voted to
+ * if voter is regular only the first state will get his vote
+ */
 struct Vote
 {
     Voter& voter;
@@ -128,6 +135,12 @@ struct Vote
 
 // -----------------------------------------------------------
 
+/**
+ * contains MainControl attributes and methods as described in the PDF
+ * contains the limit allowed in the eurovision, phase, array of
+ * ParticipantWithVotes that holds registered Participant to the eurovision.
+ * also contains Iterator, with the standard operators
+ */
 class MainControl
 {
     const int max_time_length;
@@ -225,6 +238,12 @@ public :
     };
     Iterator begin() const;
     Iterator end() const;
+    /**
+     * function like operator that returns the state that finish in the
+     * wanted location by the VoterType type.
+     * @param location
+     * @param type
+     */
     string operator()(int location, VoterType type);
 };
 
@@ -232,7 +251,15 @@ ostream &operator<<(ostream &os, const Participant &p);
 ostream &operator<<(ostream &os, const Voter &voter);
 ostream &operator<<(ostream &os, const MainControl &mc);
 // -----------------------------------------------------------
-
+/**
+ * get Container and index and returns the location of the index for the i for
+ * the container data, using operator<
+ * @tparam Iterator
+ * @param i
+ * @param begin
+ * @param end
+ * @return
+ */
 template <class Iterator>
 Iterator get(int i, Iterator begin, Iterator end);
 // -----------------------------------------------------------

@@ -17,32 +17,56 @@ public:
 };
 
 // ---------------------------------------------
+/**
+ * abstract class
+ */
 class Seat
 {
     int line;
     int chair;
     int base_price;
 protected:
+    /**
+     * get the location string format by given params
+     * @param class_name
+     * @param area
+     * @return string as described in the PDF.
+     */
     string getLocation(const string class_name, char area = 0) const;
 public:
-    //TODO: const?
     Seat(int line, int chair, int basePrice);
     virtual ~Seat()= default;
+    /**
+     * @return the location string of the class
+     */
     virtual string location() const =0;
+    /**
+     * @return class price(int)
+     */
     virtual int price() const;
 };
 
 // ---------------------------------------------
+/**
+ * inherit from Seat, not containe price
+ */
 class GreenRoomSeat : public Seat
 {
 public:
     GreenRoomSeat(int line, int chair);
     ~GreenRoomSeat() override = default;
     string location() const override;
+    /**
+     * this function will throw NoPrice exeption
+     */
     int price() const override;
 };
 
 // ---------------------------------------------
+/**
+ * abstract class
+ * inherit from Seat, price is increase the basic price by 100
+ */
 class MainHallSeat : public Seat
 {
 protected:
@@ -52,6 +76,10 @@ public:
 };
 
 // ---------------------------------------------
+/**
+ * abstract class
+ * inherit from MainHallSeat, price is increase the basic price by 300
+ */
 class SpecialSeat : public MainHallSeat
 {
 protected:
@@ -61,6 +89,9 @@ public:
 };
 
 // ---------------------------------------------
+/**
+ * inherit from SpecialSeat, price is increase the basic price by 1000
+ */
 class GoldenCircleSeat : public SpecialSeat
 {
 public:
@@ -70,6 +101,9 @@ public:
 };
 
 // ---------------------------------------------
+/**
+ * inherit from SpecialSeat, price is 200
+ */
 class DisablePodiumSeat : public SpecialSeat
 {
 public:
@@ -79,6 +113,10 @@ public:
 };
 
 // ---------------------------------------------
+/**
+ * abstract class
+ * inherit from SpecialSeat
+ */
 class RegularSeat : public MainHallSeat
 {
 protected:
@@ -89,6 +127,9 @@ public:
 };
 
 // ---------------------------------------------
+/**
+ * inherit from RegularSeat, price is increase the basic price by 500
+ */
 class FrontRegularSeat : public RegularSeat
 {
 public:
@@ -98,6 +139,9 @@ public:
 };
 
 // ---------------------------------------------
+/**
+ * inherit from RegularSeat, price is increase the basic price by 250
+ */
 class MiddleRegularSeat : public RegularSeat
 {
 public:
@@ -107,6 +151,9 @@ public:
 };
 
 // ----------------------------------ֺֺ-----------
+/**
+ * inherit from RegularSeat
+ */
 class RearRegularSeat : public RegularSeat
 {
 public:
