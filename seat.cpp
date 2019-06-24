@@ -65,7 +65,7 @@ SpecialSeat::SpecialSeat(int line, int chair, int basePrice):
     MainHallSeat(line, chair, basePrice+300) {}
 
 GoldenCircleSeat::GoldenCircleSeat(int line, int chair, int basePrice)
-        : SpecialSeat(line, chair, basePrice+1000) {} //
+        : SpecialSeat(line, chair, basePrice+1000) {}
 
 string GoldenCircleSeat::location() const {
     return getLocation("Golden Circle");

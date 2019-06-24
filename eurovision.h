@@ -11,9 +11,7 @@ using std::string;
 using std::vector;
 using std::ostream;
 using std::endl;
-//deleteeeeeee
-#include <array>
-//
+
 //---------------------------------------------------
 
 enum VoterType { All, Regular, Judge };
@@ -36,12 +34,37 @@ public:
     ~Participant() = default;
     Participant(const Participant& p) = delete;
     Participant &operator=(const Participant& p) = delete;
+    /**
+     * @return state_name
+     */
     const string state() const;
+    /**
+     * @return state_name
+     */
     string song() const;
+    /**
+     * @return song_name
+     */
     int timeLength() const;
+    /**
+     * @return song_length
+     */
     string singer() const;
+    /**
+    * @return is_registered
+    */
     bool isRegistered() const;
+    /**
+     * update the attributes of song_name, song_length and singer_name
+     * @param song
+     * @param timeLength
+     * @param singer
+     */
     void update(string song, int timeLength, string singer);
+    /**
+     * update the is_registered attribute({True,False})
+     * @param flag
+     */
     void updateRegistered(bool flag);
 };
 
@@ -58,9 +81,21 @@ public :
     Voter(const Voter& voter) = delete;
     Voter &operator=(const Voter& voter) = delete;
     ~Voter() = default;
+    /**
+     * increments times_voted by 1
+     */
     Voter& operator++();
+    /**
+     * @return state_name
+     */
     const string state() const;
+    /**
+     * @return type
+     */
     VoterType voterType() const;
+    /**
+     * @return times_voted
+     */
     int timesOfVotes() const;
 };
 
@@ -71,6 +106,12 @@ struct Vote
 {
     Voter& voter;
     string* states;
+    /**
+     * @param voter
+     * @param state0  -  the only state in regular vote, and no.1 state in
+     * judge votes
+     * @param state1-9  -  places 2-10 in judge votes
+     */
     Vote(Voter& voter, string state0,
          string state1 = "", string state2 = "",
          string state3 = "", string state4 = "",
@@ -93,6 +134,10 @@ class MainControl
     const int max_number_of_participants;
     const int max_times_voter;
     Phase phase;
+    /**
+     * include a pointer to registered participant, sum of his regular votes,
+     * and sum of his judge votes
+     */
     struct ParticipantWithVotes{
         Participant* participant;
         int regular_votes;
@@ -103,10 +148,30 @@ class MainControl
         ParticipantWithVotes(const ParticipantWithVotes &pwv) = default;
         static void swap(ParticipantWithVotes& a, ParticipantWithVotes& b);
     };
+
+    /**
+     * @param state name
+     * @return the index of the state in the participants array
+     */
     int get_state_index(const string& state) const;
+    /**
+     * shifts the participants array left of right
+     * for example
+     * {*,*,*,NULL,*,*} shifting this array left with
+     * index 3 will do{*,*,*,*,*,*,NULL}
+     * @param i
+     * @param d
+     */
     void shift(int i, Direction d);
+    /**
+     * array of all registered participants
+     */
     ParticipantWithVotes* participant_array;
     int participant_counter;
+    /**
+     * @param state
+     * @return pointer to participant with votes in the participants array
+     */
     ParticipantWithVotes* getByState(string state) const;
 public :
     explicit MainControl(int max_time_length = 180,
@@ -115,11 +180,35 @@ public :
     MainControl(const MainControl &contest) = delete;
     MainControl &operator=(const MainControl &contest) = delete;
     ~MainControl();
+    /**
+     * setting the phase in the conditions as described in the PDF
+     * @param new_phase
+     */
     void setPhase(Phase new_phase);
+    /**
+     * @param participant_name
+     * @return if the participant is registered
+     */
     bool participate(string participant_name);
+    /**
+     * @param p
+     * @return if the participant is can be registered
+     */
     bool legalParticipant(Participant& p);
+    /**
+     * register a participant to the contest
+     * @param p
+     */
     MainControl &operator+=(Participant& p);
+    /**
+     * unregister a participant to the contest
+     * @param p
+     */
     MainControl &operator-=(Participant& p);
+    /**
+     * adding vote to participant
+     * @param vote
+     */
     MainControl &operator+=(Vote vote);
     friend ostream &operator<<(ostream &os, const MainControl &mc);
     class Iterator{

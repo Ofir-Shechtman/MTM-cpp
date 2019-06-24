@@ -8,5 +8,6 @@ add_executable(hw3
         #part2/clion/finalTest.cpp
         eurovision.cpp
         #part1_tests/finaltest.cpp
+        #part3_tests/test1.cpp
         seat.cpp)
 
